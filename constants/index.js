@@ -1,5 +1,11 @@
-import images from "./images";
-import icons from "./icons";
-import { COLORS, FONT, SIZES, SHADOWS } from "./theme";
+import argonTheme from './Theme';
+import articles from './articles';
+import Images from './Images';
+import tabs from './tabs';
 
-export { images, icons, COLORS, FONT, SIZES, SHADOWS };
+export {
+  articles, 
+  argonTheme,
+  Images,
+  tabs
+};
