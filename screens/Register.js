@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {
   StyleSheet,
   ImageBackground,
@@ -12,10 +12,34 @@ import { Block, Checkbox, Text, theme } from "galio-framework";
 import { Button, Icon, Input } from "../components";
 import { Images, argonTheme } from "../constants";
 
+import { useMutation} from "@apollo/client";
+import { register } from "../gql/queries";
+
 const { width, height } = Dimensions.get("screen");
 
-class Register extends React.Component {
-  render() {
+export default function Register (props){
+  const [username, setUsername] = useState("")
+  const [password, setPassword] = useState("")
+  const [email, setEmail] = useState("")
+  const [birthday, setBirthday] = useState("")
+  const [phone, setPhone] = useState("")
+  const [description, setDescription] = useState("")
+
+  const [runMutation, {data, loading, error}] = useMutation(register, {
+    variables: {
+      "username": username, 
+      "password": password,
+      "email": email,
+      "description": description,
+      "birthday": birthday,
+      "phone": phone,
+    },
+    enabled:false,
+    onCompleted:(data) => {
+      console.log(data)
+    }
+  }) 
+
     return (
       <Block flex middle>
         <StatusBar hidden />
@@ -44,6 +68,7 @@ class Register extends React.Component {
                       <Input
                         borderless
                         placeholder="Username"
+                        onChangeText={newUsername => setUsername(newUsername)}
                         iconContent={
                           <Icon
                             size={16}
@@ -59,6 +84,7 @@ class Register extends React.Component {
                       <Input
                         borderless
                         placeholder="Email"
+                        onChangeText={newEmail => setEmail(newEmail)}
                         iconContent={
                           <Icon
                             size={16}
@@ -75,6 +101,7 @@ class Register extends React.Component {
                         password
                         borderless
                         placeholder="Password"
+                        onChangeText={newPassword => setPassword(newPassword)}
                         iconContent={
                           <Icon
                             size={16}
@@ -90,6 +117,7 @@ class Register extends React.Component {
                       <Input
                         borderless
                         placeholder="Birthday"
+                        onChangeText={newBirthday => setBirthday(newBirthday)}
                         iconContent={
                           <Icon
                             size={16}
@@ -101,10 +129,28 @@ class Register extends React.Component {
                         }
                       />
                     </Block>
-                    <Block width={width * 0.8} style={{ marginBottom: 15 }}>
+                    <Block width={width * 0.8}>
                       <Input
                         borderless
                         placeholder="Phone"
+                        onChangeText={newPhone => setPhone(newPhone)}
+                        iconContent={
+                          <Icon
+                            size={16}
+                            color={argonTheme.COLORS.ICON}
+                            name="bell"
+                            family="ArgonExtra"
+                            style={styles.inputIcons}
+                          />
+                        }
+                      />
+                    </Block>
+
+                    <Block width={width * 0.8} style={{ marginBottom: 15 }}>
+                      <Input
+                        borderless
+                        placeholder="Description"
+                        onChangeText={newDescription => setDescription(newDescription)}
                         iconContent={
                           <Icon
                             size={16}
@@ -118,7 +164,10 @@ class Register extends React.Component {
                     </Block>
                     
                     <Block middle>
-                      <Button color="primary" style={styles.createButton}>
+                      <Button color="primary" style={styles.createButton} onPress={() => {
+                        console.log(username)
+                        runMutation()
+                      }}>
                         <Text bold size={14} color={argonTheme.COLORS.WHITE}>
                           REGISTER
                         </Text>
@@ -133,7 +182,7 @@ class Register extends React.Component {
       </Block>
     );
   }
-}
+
 
 const styles = StyleSheet.create({
   registerContainer: {
@@ -195,5 +244,3 @@ const styles = StyleSheet.create({
     backgroundColor: "#d10a30"
   }
 });
-
-export default Register;

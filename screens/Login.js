@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   ImageBackground,
@@ -9,13 +9,31 @@ import {
 } from "react-native";
 import { Block, Checkbox, Text, theme } from "galio-framework";
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useLazyQuery} from "@apollo/client";
+import { login } from "../gql/queries";
+
 import { Button, Icon, Input } from "../components";
 import { Images, argonTheme } from "../constants";
 
 const { width, height } = Dimensions.get("screen");
 
-class Login extends React.Component {
-  render() {
+export default function Login (props) {
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+
+  const [runQuery, {data, loading, error}] = useLazyQuery(login, {
+    variables: {
+      email: email, 
+      password: password
+    },
+    enabled:false,
+    onCompleted:(data) => {
+      console.log(data)  
+    }
+  })
+
+
     return (
       <Block flex middle>
         <StatusBar hidden />
@@ -44,6 +62,7 @@ class Login extends React.Component {
                       <Input
                         borderless
                         placeholder="Email"
+                        onChangeText={newEmail => setEmail(newEmail)}
                         iconContent={
                           <Icon
                             size={16}
@@ -60,6 +79,7 @@ class Login extends React.Component {
                         password
                         borderless
                         placeholder="Password"
+                        onChangeText={newPassword => setPassword(newPassword)}
                         iconContent={
                           <Icon
                             size={16}
@@ -72,7 +92,9 @@ class Login extends React.Component {
                       />
                     </Block>
                     <Block middle>
-                      <Button color="primary" style={styles.createButton}>
+                      <Button color="primary" style={styles.createButton} onPress={() => {
+                        runQuery()
+                      }}>
                         <Text bold size={14} color={argonTheme.COLORS.WHITE}>
                           LOG IN
                         </Text>
@@ -87,7 +109,7 @@ class Login extends React.Component {
       </Block>
     );
   }
-}
+
 
 const styles = StyleSheet.create({
   registerContainer: {
@@ -150,4 +172,3 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Login;
