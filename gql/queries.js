@@ -29,3 +29,26 @@ mutation register($email:String!, $password:String!, $birthday: String!, $phone:
   	message  
   }
 }`;
+
+export const twidditFeed=gql`
+query userFeed($userId: Int!){
+  userFeed(userId: $userId){
+    user{
+      username 
+    }
+    twiddit {
+      twiddit {
+        communidditsId
+        retwidditId
+        text
+        imageURL1
+        imageURL2
+        imageURL3
+        imageURL4
+        videoURL
+      }
+      number_of_replies
+    }
+  }
+}
+`

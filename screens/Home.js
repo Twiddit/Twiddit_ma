@@ -1,13 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Dimensions, ScrollView } from 'react-native';
-import { Block, theme } from 'galio-framework';
+import { Block, Text, theme } from 'galio-framework';
 
 import { Card } from '../components';
 import articles from '../constants/articles';
 import Twiddit from '../components/Twiddit';
 const { width } = Dimensions.get('screen');
 
-class Home extends React.Component {
+import { twidditFeed } from "../gql/queries"
+import { useQuery } from "@apollo/client";
+
+export default function Home (props) {
+  const [clicked, setClicked] = useState(false);
+  const { data } = useQuery(twidditFeed);
   renderArticles = () => {
     return (
       <ScrollView
@@ -29,14 +34,13 @@ class Home extends React.Component {
     )
   }
 
-  render() {
-    return (
-      <Block flex center style={styles.home}>
-        
-        {this.renderArticles()}
-      </Block>
-    );
-  }
+  return (
+    <Block flex center style={styles.home}>    
+      {this.renderArticles()}
+      
+    </Block>
+  );
+  
 }
 
 const styles = StyleSheet.create({
@@ -49,4 +53,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Home;

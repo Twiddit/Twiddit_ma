@@ -27,9 +27,11 @@ export default function Login (props) {
       email: email, 
       password: password
     },
-    enabled:false,
     onCompleted:(data) => {
       console.log(data)  
+    },
+    onError(error){
+      console.log(error)
     }
   })
 
