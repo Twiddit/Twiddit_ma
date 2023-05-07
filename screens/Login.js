@@ -29,15 +29,29 @@ export default function Login (props) {
     },
     enabled:false,
     onCompleted:(data) => {
+      storeData(data.login.data.accessToken)
+      storeData(data.login.data.userId)
       console.log(data)  
+      
     },
     onError(error){
       console.log(error)
     }
   })
 
+  const storeData = async (value) => {
+    try {
+      const jsonValue = JSON.stringify(value)
+      await AsyncStorage.setItem('@storage_Key', jsonValue)
+    } catch (e) {
+      console.log(e)
+      // saving error
+    }
+  }
+
 
     return (
+      
       <Block flex middle>
         <StatusBar hidden />
         <ImageBackground

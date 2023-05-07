@@ -9,6 +9,7 @@ query login($email:String!, $password:String!){
         message
         data{
           accessToken
+          userId
         }
     
     }
