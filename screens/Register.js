@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   ImageBackground,
@@ -12,7 +12,7 @@ import { Block, Checkbox, Text, theme } from "galio-framework";
 import { Button, Icon, Input } from "../components";
 import { Images, argonTheme } from "../constants";
 
-import { useMutation} from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { register } from "../gql/queries";
 
 const { width, height } = Dimensions.get("screen");
@@ -25,18 +25,21 @@ export default function Register (props){
   const [phone, setPhone] = useState("")
   const [description, setDescription] = useState("")
 
-  const [runMutation, {data, loading, error}] = useMutation(register, {
+  const [runMutation, {data, error}] = useMutation(register, {
     variables: {
-      "username": username, 
-      "password": password,
-      "email": email,
-      "description": description,
-      "birthday": birthday,
-      "phone": phone,
+      username: username, 
+      email: email,
+      password: password,
+      birthday: birthday,
+      phone: phone,
+      description: description,
     },
     enabled:false,
     onCompleted:(data) => {
       console.log(data)
+    },
+    onError(error){
+      console.log(error)
     }
   }) 
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Dimensions,
@@ -13,13 +13,30 @@ import { Button, Twiddit } from "../components";
 import { Images, argonTheme } from "../constants";
 import { HeaderHeight } from "../constants/utils";
 import articles from '../constants/articles';
+import { userProfileData } from "../gql/queries";
+import { useQuery } from "@apollo/client";
 
 const { width, height } = Dimensions.get("screen");
 
 const thumbMeasure = (width - 48 - 32) / 3;
 
-class Profile extends React.Component {
-  render() {
+export default function Profile (props) {
+
+  const [userId, setuserId] = useState(1)
+
+  const {data, error} = useQuery(userProfileData, {
+    variables: {
+      userId: 1, 
+    },
+    enabled:false,
+    onCompleted:(data) => {
+      console.log(data)  
+    },
+    onError(error){
+      console.log(error)
+    }
+  })
+  
     return (
       <Block flex style={styles.profile}>
         <Block flex>
@@ -71,17 +88,7 @@ class Profile extends React.Component {
                       </Text>
                       <Text size={12} color={argonTheme.COLORS.TEXT}>Twiddits</Text>
                     </Block>
-                    <Block middle>
-                      <Text
-                        bold
-                        color="#525F7F"
-                        size={18}
-                        style={{ marginBottom: 4 }}
-                      >
-                        -
-                      </Text>
-                      <Text size={12} color={argonTheme.COLORS.TEXT}>-</Text>
-                    </Block>
+                    
                     <Block middle>
                       <Text
                         bold
@@ -98,9 +105,17 @@ class Profile extends React.Component {
                 <Block flex>
                   <Block middle style={styles.nameInfo}>
                     <Text bold size={28} color="#32325D">
-                      Jorge Rodriguez
+                      {data.viewProfile.username}
                     </Text>
-                    
+                  </Block>
+                  <Block middle>
+                    <Text
+                      size={16}
+                      color="#525F7F"
+                      style={{ textAlign: "center" }}
+                    >
+                      {data.viewProfile.email}
+                    </Text>
                   </Block>
                   <Block middle style={{ marginTop: 30, marginBottom: 16 }}>
                     <Block style={styles.divider} />
@@ -111,7 +126,7 @@ class Profile extends React.Component {
                       color="#525F7F"
                       style={{ textAlign: "center" }}
                     >
-                      Hola! Soy Jorge y estudio sistemas en la UN
+                      {data.viewProfile.description}
                     </Text>
                   </Block>
                   
@@ -257,7 +272,6 @@ class Profile extends React.Component {
     );
   }
   
-}
 
 const styles = StyleSheet.create({
   profile: {
@@ -318,5 +332,3 @@ const styles = StyleSheet.create({
     height: thumbMeasure
   }
 });
-
-export default Profile;

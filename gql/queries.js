@@ -15,15 +15,16 @@ query login($email:String!, $password:String!){
 }`;
 
 export const register=gql `
-mutation register($email:String!, $password:String!, $birthday: String!, $phone: String!, $description: Int!, $username: String!){
+mutation register($username: String!, $email:String!, $password:String!, $birthday: String!, $phone: String!, $description: String!){
   register(registerBody:{
+    username:$username
     email: $email,
     password: $password,
     birthday: $birthday,
     phone:$phone,
-    profilePhoto:"https://dummyimage.com/640x360/fff/aaa", 
 	  description:$description,  
-	  username:$username
+    profilePhoto:"https://dummyimage.com/640x360/fff/aaa", 
+	  
   })
   {
   	message  
@@ -49,6 +50,18 @@ query userFeed($userId: Int!){
       }
       number_of_replies
     }
+  }
+}
+`
+export const userProfileData=gql`
+query viewProfile($userId: Int!){
+  viewProfile(id:$userId){
+    username
+    email
+    birthday
+    phone
+    profile_photo
+    description
   }
 }
 `

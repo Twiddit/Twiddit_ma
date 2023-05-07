@@ -10,7 +10,7 @@ import {
 import { Block, Checkbox, Text, theme } from "galio-framework";
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useLazyQuery} from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 import { login } from "../gql/queries";
 
 import { Button, Icon, Input } from "../components";
@@ -22,11 +22,12 @@ export default function Login (props) {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
-  const [runQuery, {data, loading, error}] = useLazyQuery(login, {
+  const [runQuery, {data, error}] = useLazyQuery(login, {
     variables: {
       email: email, 
       password: password
     },
+    enabled:false,
     onCompleted:(data) => {
       console.log(data)  
     },

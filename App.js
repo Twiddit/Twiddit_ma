@@ -8,7 +8,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { ApolloProvider, InMemoryCache, ApolloClient, gql } from "@apollo/client";
 
 const client = new ApolloClient({
-  uri:"http://192.168.5.102:5000/graphiql",
+  uri:"http://192.168.5.102:5000/graphql",
   cache: new InMemoryCache()
 })
 
