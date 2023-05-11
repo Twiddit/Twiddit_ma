@@ -16,7 +16,7 @@ import Profile from "../screens/Profile";
 import React from "react";
 import Register from "../screens/Register";
 import Login from "../screens/Login";
-import Search from "../screens/Search";
+import Twiddit from "../screens/Twiddit";
 import Communiddits from "../screens/Communiddits";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createDrawerNavigator } from "@react-navigation/drawer";
@@ -42,45 +42,6 @@ function ElementsStack(props) {
         options={{
           header: ({ navigation, scene }) => (
             <Header title="Elements" navigation={navigation} scene={scene} />
-          ),
-          cardStyle: { backgroundColor: "#F8F9FE" },
-        }}
-      />
-      <Stack.Screen
-        name="Pro"
-        component={Pro}
-        options={{
-          header: ({ navigation, scene }) => (
-            <Header
-              title=""
-              back
-              white
-              transparent
-              navigation={navigation}
-              scene={scene}
-            />
-          ),
-          headerTransparent: true,
-        }}
-      />
-    </Stack.Navigator>
-  );
-}
-
-function ArticlesStack(props) {
-  return (
-    <Stack.Navigator
-      screenOptions={{
-        mode: "card",
-        headerShown: "screen",
-      }}
-    >
-      <Stack.Screen
-        name="Articles"
-        component={Articles}
-        options={{
-          header: ({ navigation, scene }) => (
-            <Header title="Articles" navigation={navigation} scene={scene} />
           ),
           cardStyle: { backgroundColor: "#F8F9FE" },
         }}
@@ -168,7 +129,6 @@ function HomeStack(props) {
           header: ({ navigation, scene }) => (
             <Header
               title="Home"
-              search
               options
               navigation={navigation}
               scene={scene}
@@ -200,8 +160,8 @@ export default function OnboardingStack(props) {
       <Stack.Screen name="App" component={AppStack} />
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Register" component={Register} />
-
       <Stack.Screen name="Communiddits" component={Communiddits} />
+      <Stack.Screen name="Twiddit" component={Twiddit} />
     </Stack.Navigator>
   );
 }
@@ -226,33 +186,7 @@ export function LoginStack(props) {
   );
 }
 
-export function SearchStack(props) {
-  return (
-    <Stack.Navigator
-      screenOptions={{
-        mode: "card",
-        headerShown: "screen",
-      }}
-    >
-      <Stack.Screen
-        name="Search"
-        component={Search}
-        options={{
-          header: ({ navigation, scene }) => (
-            <Header
-              title="Search"
-              search
-              navigation={navigation}
-              scene={scene}
-            />
-          ),
-          cardStyle: { backgroundColor: "#F8F9FE" },
-        }}
-      />
-      
-    </Stack.Navigator>
-  );
-}
+
 
 export function CommunidditsStack(props) {
   return (
@@ -352,13 +286,6 @@ function AppStack(props) {
       <Drawer.Screen
         name="Login"
         component={LoginStack}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Drawer.Screen
-        name="Search"
-        component={SearchStack}
         options={{
           headerShown: false,
         }}

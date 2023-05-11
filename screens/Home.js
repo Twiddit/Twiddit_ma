@@ -12,8 +12,21 @@ import { useQuery } from "@apollo/client";
 
 export default function Home (props) {
   const [clicked, setClicked] = useState(false);
-  const { data } = useQuery(twidditFeed);
+  const {data, loading, error} = useQuery(twidditFeed, {
+    variables: {
+      userId:1, 
+    },
+    enabled:false,
+    onCompleted:(data) => {
+      console.log(data.userFeed)
+    },
+    onError(error){
+      console.log(error)
+    }
+  })
   renderArticles = () => {
+    if (!loading) {
+
     return (
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -32,6 +45,7 @@ export default function Home (props) {
         </Block>
       </ScrollView>
     )
+    }
   }
 
   return (

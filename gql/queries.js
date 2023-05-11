@@ -66,3 +66,46 @@ query viewProfile($userId: Int!){
   }
 }
 `
+
+export const userTwiddits=gql`
+query MyTwiddits($userId: Int!){
+    myTwiddits(userId:$userId){
+      user {
+        username
+      }
+      twiddit {
+        twiddit {
+          tags
+          text
+          creationDate
+        }
+      }
+    }
+}
+
+`
+
+export const communidditsAll=gql`
+query{
+  communidditsAll{
+    aboutUs
+    name
+  }
+}
+`
+
+export const communidditFeed=gql`
+query communidditFeed($communidditId:Int!){
+  communidditsFeed(communidditId:$communidditId){
+    user {
+      username
+    }
+    twiddit {
+      twiddit {
+        text
+        creationDate
+      }
+    }
+  }
+}
+`

@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Dimensions, ScrollView } from 'react-native';
 import { Block, theme } from 'galio-framework';
-import { communidditsAll } from "../gql/queries";
+import { communidditFeed, communidditsAll } from "../gql/queries";
 import { useQuery } from "@apollo/client";
 
 
@@ -12,7 +12,7 @@ const { width } = Dimensions.get('screen');
 export default function Communiddits (props)  {
 
 
-  const {data, loading, error} = useQuery(communidditsAll, {
+  const {data, loading, error} = useQuery(communidditFeed, {
     enabled:false,
     onCompleted:(data) => {
       console.log(data)

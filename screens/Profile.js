@@ -5,6 +5,7 @@ import {
   ScrollView,
   Image,
   ImageBackground,
+  FlatList,
   Platform
 } from "react-native";
 import { Block, Text, theme } from "galio-framework";
@@ -13,7 +14,7 @@ import { Button, Twiddit } from "../components";
 import { Images, argonTheme } from "../constants";
 import { HeaderHeight } from "../constants/utils";
 import articles from '../constants/articles';
-import { userProfileData } from "../gql/queries";
+import { userProfileData, userTwiddits } from "../gql/queries";
 import { useQuery } from "@apollo/client";
 
 const { width, height } = Dimensions.get("screen");
@@ -24,19 +25,35 @@ export default function Profile (props) {
 
   const [userId, setuserId] = useState(1)
 
-  const {data, error} = useQuery(userProfileData, {
+  const {data, loading, error} = useQuery(userProfileData, {
     variables: {
       userId: 1, 
     },
     enabled:false,
     onCompleted:(data) => {
-      console.log(data)  
+      // console.log(data)
     },
     onError(error){
       console.log(error)
     }
   })
-  
+
+  const {dataMyTwiddits, loadingTwiddits, errorMyTwiddits} = useQuery(userTwiddits, {
+    variables: {
+      userId: 1, 
+    },
+    enabled:false,
+    onCompleted:(dataMyTwiddits) => {
+      console.log(dataMyTwiddits.myTwiddits.twiddit)
+    },
+    onError(error){
+      console.log(error)
+    }
+  })
+
+ 
+
+  if (!loading && !loadingTwiddits) {
     return (
       <Block flex style={styles.profile}>
         <Block flex>
@@ -136,7 +153,17 @@ export default function Profile (props) {
           </ImageBackground>
           
         </Block>
-        {/* 
+        {}
+      </Block>
+      
+    );
+  }
+
+    // End inf
+  }
+    
+
+  /* 
         !!!!!!!!!
 
         ESTO PUEDE SERVIR PARA HACER LA GALERIA DE IMAGENEEEES!!!!!!!!!!!!!!!!!!
@@ -267,10 +294,7 @@ export default function Profile (props) {
               </Block>
           </Block>
         </Block>
-                  </ScrollView>*/}
-      </Block>
-    );
-  }
+                  </ScrollView>*/
   
 
 const styles = StyleSheet.create({
