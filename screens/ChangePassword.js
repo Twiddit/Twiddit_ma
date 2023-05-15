@@ -13,38 +13,30 @@ import { Button, Icon, Input } from "../components";
 import { Images, argonTheme } from "../constants";
 
 import { useMutation } from "@apollo/client";
-import { register } from "../gql/queries";
+import { updateProfile, userProfileData, userTwiddits } from "../gql/queries";
+import { useQuery } from "@apollo/client";
 
 const { width, height } = Dimensions.get("screen");
 
-export default function Register (props){
-  const { navigation } = props;
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
-  const [email, setEmail] = useState("")
-  const [birthday, setBirthday] = useState("")
-  const [phone, setPhone] = useState("")
-  const [description, setDescription] = useState("")
+export default function ChangePassword (props){
+    const [oldPassword, setOldPassword] = useState("")
+    const [newPassword, setNewPassword] = useState("")
+  
+    
+    const {data, loading, error} = useQuery(userProfileData, {
+        variables: {
+          userId: 1, 
+        },
+        enabled:false,
+        onCompleted:(data) => {
+          // console.log(data)
+        },
+        onError(error){
+          console.log(error)
+        }
+    })
 
-  const [runMutation, {data, error}] = useMutation(register, {
-    variables: {
-      username: username, 
-      email: email,
-      password: password,
-      birthday: birthday,
-      phone: phone,
-      description: description,
-    },
-    enabled:false,
-    onCompleted:(data) => {
-      console.log(data)
-      navigation.navigate("Login")
-    },
-    onError(error){
-      console.log(error)
-    }
-  }) 
-
+    if (!loading) {
     return (
       <Block flex middle>
         <StatusBar hidden />
@@ -60,7 +52,7 @@ export default function Register (props){
               <Block flex>
                 <Block flex={0.17} middle>
                   <Text color="#8898AA" size={13}>
-                  Hi there! Welcome to Twiddit!. Let's create your account
+                    Update your password
                   </Text>
                 </Block>
                 <Block flex center>
@@ -69,27 +61,12 @@ export default function Register (props){
                     behavior="padding"
                     enabled
                   >
+                    
                     <Block width={width * 0.8}>
                       <Input
                         borderless
-                        placeholder="Username"
-                        onChangeText={newUsername => setUsername(newUsername)}
-                        iconContent={
-                          <Icon
-                            size={16}
-                            color={argonTheme.COLORS.ICON}
-                            name="hat-3"
-                            family="ArgonExtra"
-                            style={styles.inputIcons}
-                          />
-                        }
-                      />
-                    </Block>
-                    <Block width={width * 0.8}>
-                      <Input
-                        borderless
-                        placeholder="Email"
-                        onChangeText={newEmail => setEmail(newEmail)}
+                        placeholder="Current Password"
+                        onChangeText={newPassword => setOldPassword(oldPassword)}
                         iconContent={
                           <Icon
                             size={16}
@@ -101,80 +78,29 @@ export default function Register (props){
                         }
                       />
                     </Block>
-                    <Block width={width * 0.8}>
-                      <Input
-                        password
-                        borderless
-                        placeholder="Password"
-                        onChangeText={newPassword => setPassword(newPassword)}
-                        iconContent={
-                          <Icon
-                            size={16}
-                            color={argonTheme.COLORS.ICON}
-                            name="padlock-unlocked"
-                            family="ArgonExtra"
-                            style={styles.inputIcons}
-                          />
-                        }
-                      />
-                    </Block>
-                    <Block width={width * 0.8}>
-                      <Input
-                        borderless
-                        placeholder="Birthday"
-                        onChangeText={newBirthday => setBirthday(newBirthday)}
-                        iconContent={
-                          <Icon
-                            size={16}
-                            color={argonTheme.COLORS.ICON}
-                            name="calendar-date"
-                            family="ArgonExtra"
-                            style={styles.inputIcons}
-                          />
-                        }
-                      />
-                    </Block>
-                    <Block width={width * 0.8}>
-                      <Input
-                        borderless
-                        placeholder="Phone"
-                        onChangeText={newPhone => setPhone(newPhone)}
-                        iconContent={
-                          <Icon
-                            size={16}
-                            color={argonTheme.COLORS.ICON}
-                            name="bell"
-                            family="ArgonExtra"
-                            style={styles.inputIcons}
-                          />
-                        }
-                      />
-                    </Block>
-
-                    <Block width={width * 0.8} style={{ marginBottom: 15 }}>
-                      <Input
-                        borderless
-                        placeholder="Description"
-                        onChangeText={newDescription => setDescription(newDescription)}
-                        iconContent={
-                          <Icon
-                            size={16}
-                            color={argonTheme.COLORS.ICON}
-                            name="bell"
-                            family="ArgonExtra"
-                            style={styles.inputIcons}
-                          />
-                        }
-                      />
-                    </Block>
                     
+                    <Block width={width * 0.8}>
+                      <Input
+                        borderless
+                        placeholder="New Password"
+                        onChangeText={newPassword => setNewPassword(newPassword)}
+                        iconContent={
+                          <Icon
+                            size={16}
+                            color={argonTheme.COLORS.ICON}
+                            name="bell"
+                            family="ArgonExtra"
+                            style={styles.inputIcons}
+                          />
+                        }
+                      />
+                    </Block>                    
                     <Block middle>
                       <Button color="primary" style={styles.createButton} onPress={() => {
-                        
                         runMutation()
                       }}>
                         <Text bold size={14} color={argonTheme.COLORS.WHITE}>
-                          REGISTER
+                          UPDATE PASSWORD
                         </Text>
                       </Button>
                     </Block>
@@ -186,6 +112,7 @@ export default function Register (props){
         </ImageBackground>
       </Block>
     );
+}
   }
 
 

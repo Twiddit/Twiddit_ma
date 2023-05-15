@@ -22,7 +22,7 @@ const { width, height } = Dimensions.get("screen");
 const thumbMeasure = (width - 48 - 32) / 3;
 
 export default function Profile (props) {
-
+  const { navigation } = props;
   const [userId, setuserId] = useState(1)
 
   const {data, loading, error} = useQuery(userProfileData, {
@@ -82,16 +82,19 @@ export default function Profile (props) {
                   >
                     <Button
                       small
-                      style={{ backgroundColor: "#d10a30" }}
+                      style={{ backgroundColor: "#d10a30", width: 100 }}
+                      onPress={() => navigation.navigate('EditProfile')}
                     >
-                      FOLLOW
+                      EDIT PROFILE
                     </Button>
                     <Button
                       small
-                      style={{ backgroundColor: argonTheme.COLORS.DEFAULT }}
+                      style={{ backgroundColor: "#d10a30", width: 100 }}
+                      onPress={() => navigation.navigate('ChangePassword')}
                     >
-                      BLOCK
+                      CHANGE PASSWORD
                     </Button>
+                    
                   </Block>
                   <Block row space="between">
                     <Block middle>

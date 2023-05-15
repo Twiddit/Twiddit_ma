@@ -32,6 +32,24 @@ mutation register($username: String!, $email:String!, $password:String!, $birthd
   }
 }`;
 
+export const updateProfile=gql`
+mutation updateProfile($userId: Int!, $email:String!, $phone: String!, $description: String!){
+  updateProfile(id: $userId, profile: {
+      email: $email
+      phone: $phone
+      description: $password
+  }){
+      email
+      birthday
+      phone
+      profile_photo
+      description
+      username
+  }
+}
+
+`
+
 export const twidditFeed=gql`
 query userFeed($userId: Int!){
   userFeed(userId: $userId){

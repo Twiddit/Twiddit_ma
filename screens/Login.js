@@ -19,6 +19,7 @@ import { Images, argonTheme } from "../constants";
 const { width, height } = Dimensions.get("screen");
 
 export default function Login (props) {
+  const { navigation } = props;
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
@@ -32,6 +33,7 @@ export default function Login (props) {
       storeData(data.login.data.accessToken)
       storeData(data.login.data.userId)
       console.log(data)  
+      navigation.navigate("App")
       
     },
     onError(error){
