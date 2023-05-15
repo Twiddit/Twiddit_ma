@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Dimensions, ScrollView, VirtualizedList } from 'react-native';
 import { Block, theme, Text } from 'galio-framework';
-import { communidditsAll } from "../gql/queries";
+import { userFeed } from "../gql/queries";
 import { useQuery } from "@apollo/client";
 
 
@@ -23,15 +23,13 @@ let feed = [];
 export default function Twiddits (props)  {
 
 
-
   const {data, loading, error} = useQuery(userFeed, {
     variables: {
       userId: 1
     },
     enabled:false,
     onCompleted:(data) => {
-      feed = data.userFeed
-      console.log(data.userFeed)
+      console.log(data)
     },
     onError(error){
       console.log(error)
@@ -65,7 +63,7 @@ export default function Twiddits (props)  {
     return (
       
         <VirtualizedList
-          initialNumToRender={twiddits_prueba.length}
+          initialNumToRender={feed.length}
           renderItem={({item}) => <Render user={item.user} data = {item.twiddit} />}
           keyExtractor={item => item.user.username}
           getItemCount={getItemCount}
