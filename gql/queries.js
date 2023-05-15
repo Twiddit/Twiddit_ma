@@ -32,12 +32,24 @@ mutation register($username: String!, $email:String!, $password:String!, $birthd
   }
 }`;
 
+export const changePassword=gql`
+mutation password($previous: String!, $new: String!, $authorization: String!){
+  password(passwordChangeBody:{
+    Previous: $previous
+    NewPass: $new,
+    Authorization: $authorization
+  }) {
+    message
+  }
+}
+`
+
 export const updateProfile=gql`
 mutation updateProfile($userId: Int!, $email:String!, $phone: String!, $description: String!){
   updateProfile(id: $userId, profile: {
       email: $email
       phone: $phone
-      description: $password
+      description: $description
   }){
       email
       birthday
@@ -93,9 +105,16 @@ query MyTwiddits($userId: Int!){
       }
       twiddit {
         twiddit {
+          _id
           tags
           text
+          imageURL1
+          imageURL2
+          imageURL3
+          imageURL4
+          communidditsId
           creationDate
+          
         }
       }
     }

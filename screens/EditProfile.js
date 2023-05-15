@@ -19,6 +19,7 @@ import { useQuery } from "@apollo/client";
 const { width, height } = Dimensions.get("screen");
 
 export default function EditProfile (props){
+    const { navigation } = props;
     const [email, setEmail] = useState("")
     const [phone, setPhone] = useState("")
     const [description, setDescription] = useState("")
@@ -39,6 +40,7 @@ export default function EditProfile (props){
 
     const [runMutation, {dataModifyProfile, errorModifyProfile}] = useMutation(updateProfile, {
         variables: {
+          userId: 1,
           email: email, 
           phone: phone, 
           description:description
@@ -46,6 +48,8 @@ export default function EditProfile (props){
         enabled:false,
         onCompleted:(dataModifyProfile) => {
           console.log(dataModifyProfile)  
+          navigation.navigate("Profile")
+          
           
         },
         onError(errorModifyProfile){

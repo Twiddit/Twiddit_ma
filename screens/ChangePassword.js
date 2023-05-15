@@ -13,28 +13,47 @@ import { Button, Icon, Input } from "../components";
 import { Images, argonTheme } from "../constants";
 
 import { useMutation } from "@apollo/client";
-import { updateProfile, userProfileData, userTwiddits } from "../gql/queries";
-import { useQuery } from "@apollo/client";
+import { changePassword } from "../gql/queries";
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const { width, height } = Dimensions.get("screen");
 
 export default function ChangePassword (props){
+  const { navigation } = props;
     const [oldPassword, setOldPassword] = useState("")
     const [newPassword, setNewPassword] = useState("")
   
     
-    const {data, loading, error} = useQuery(userProfileData, {
-        variables: {
-          userId: 1, 
-        },
-        enabled:false,
-        onCompleted:(data) => {
-          // console.log(data)
-        },
-        onError(error){
-          console.log(error)
+    const getAuth = async () => {
+      try {
+
+        const value = await AsyncStorage.getItem("Authorization")
+
+        if(value !== null) {
+          console.log(value)
+          return value
         }
-    })
+      } catch(e) {
+        // error reading value
+        console.log(e)
+      }
+    }
+
+    const getUserID = async () => {
+      try {
+
+        const value = await AsyncStorage.getItem("UserID")
+
+        if(value !== null) {
+          console.log(value)
+          return value
+        }
+      } catch(e) {
+        // error reading value
+      }
+    }
+
 
     if (!loading) {
     return (

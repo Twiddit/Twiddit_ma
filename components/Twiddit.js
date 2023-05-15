@@ -5,6 +5,8 @@ import { StyleSheet, Dimensions, Image, TouchableWithoutFeedback } from 'react-n
 import { Block, Text, theme } from 'galio-framework';
 import { Button, Header, Icon, Input, Select, Switch } from "../components/";
 
+import { Images } from "../constants";
+
 import { argonTheme } from '../constants';
 
 
@@ -26,14 +28,14 @@ class Twiddit extends React.Component {
       <Block row={horizontal} card flex style={cardContainer}>
         <TouchableWithoutFeedback onPress={() => navigation.navigate('Pro')}>
           <Block flex style={imgContainer}>
-            <Image source={{uri: item.image}} style={imageStyles} />
+            <Image source={{uri: Images.ProfilePicture}} style={imageStyles} />
           </Block>
         </TouchableWithoutFeedback>
         <TouchableWithoutFeedback onPress={() => navigation.navigate('Pro')}>
           <Block flex space="between" style={styles.cardDescription}>
-            <Text size={14} style={styles.cardTitle}>{item.username}</Text>
-            <Text size={14} style={styles.cardTitle}>{item.twiddit}</Text>
-            <Text size={12} muted={!ctaColor} color={ctaColor || argonTheme.COLORS.ACTIVE} bold>{item.cta}</Text>
+            <Text size={14} style={styles.cardTitle}>username</Text>
+            <Text size={14} style={styles.cardTitle}>texto del twiddit</Text>
+            <Text size={12} muted={!ctaColor} color={ctaColor || argonTheme.COLORS.ACTIVE} bold>xd</Text>
             <Block row flex={0.25} middle style={styles.socialConnect}>
                 <Block flex left>
                     <Button small center color="default" style={styles.twidditButton}>

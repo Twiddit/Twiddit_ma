@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { Block, Text, theme } from "galio-framework";
 
-import { Button, Twiddit } from "../components";
+import { Button, Twiddit, Icon } from "../components";
 import { Images, argonTheme } from "../constants";
 import { HeaderHeight } from "../constants/utils";
 import articles from '../constants/articles';
@@ -90,9 +90,15 @@ export default function Profile (props) {
                     <Button
                       small
                       style={{ backgroundColor: "#d10a30", width: 100 }}
-                      onPress={() => navigation.navigate('ChangePassword')}
+                      onPress={() => navigation.navigate('EditProfile')}
                     >
-                      CHANGE PASSWORD
+                      <Icon
+                            size={16}
+                            color={argonTheme.COLORS.WHITE}
+                            name="bell"
+                            family="ArgonExtra"
+                            style={styles.inputIcons}
+                          />
                     </Button>
                     
                   </Block>

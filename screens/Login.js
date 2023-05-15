@@ -30,8 +30,8 @@ export default function Login (props) {
     },
     enabled:false,
     onCompleted:(data) => {
-      storeData(data.login.data.accessToken)
-      storeData(data.login.data.userId)
+      storeData("Authorization", data.login.data.accessToken)
+      storeData("UserID", data.login.data.userId)
       console.log(data)  
       navigation.navigate("App")
       
@@ -41,10 +41,10 @@ export default function Login (props) {
     }
   })
 
-  const storeData = async (value) => {
+  const storeData = async (key, value) => {
     try {
       const jsonValue = JSON.stringify(value)
-      await AsyncStorage.setItem('@storage_Key', jsonValue)
+      await AsyncStorage.setItem(key, jsonValue)
     } catch (e) {
       console.log(e)
       // saving error
