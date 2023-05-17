@@ -32,16 +32,12 @@ export default function Home (props) {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.articles}>
         <Block flex>
-          <Twiddit item={articles[7]}></Twiddit>
         </Block>
         <Block flex>
-          <Twiddit item={articles[8]}></Twiddit>
         </Block>
         <Block flex>
-          <Twiddit item={articles[6]}></Twiddit>
         </Block>
         <Block flex>
-          <Twiddit item={articles[9]}></Twiddit>
         </Block>
       </ScrollView>
     )

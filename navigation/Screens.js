@@ -18,8 +18,7 @@ import Register from "../screens/Register";
 import Login from "../screens/Login";
 import Twiddit from "../screens/Twiddit";
 import Communiddits from "../screens/Communiddits";
-
-import ChangePassword from "../screens/ChangePassword";
+import Notifications from "../screens/Notifications";
 import EditProfile from "../screens/EditProfile";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createDrawerNavigator } from "@react-navigation/drawer";
@@ -165,8 +164,7 @@ export default function OnboardingStack(props) {
       <Stack.Screen name="Register" component={Register} />
       <Stack.Screen name="Communiddits" component={Communiddits} />
       <Stack.Screen name="Twiddit" component={Twiddit} />
-
-      <Stack.Screen name="ChangePassword" component={ChangePassword} />
+      <Stack.Screen name="Notifications" component={Notifications} />
       <Stack.Screen name="EditProfile" component={EditProfile} />
     </Stack.Navigator>
   );

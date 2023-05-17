@@ -116,6 +116,9 @@ query MyTwiddits($userId: Int!){
           creationDate
           
         }
+
+        number_of_likes
+        number_of_replies
       }
     }
 }
@@ -143,6 +146,24 @@ query communidditFeed($communidditId:Int!){
         creationDate
       }
     }
+  }
+}
+`
+
+export const viewNotifications=gql`
+query viewNotifications($userId: Int!){
+  viewNotifications(id: $userId){
+      followerId
+      followedId
+  }
+}
+
+`
+export const getSingleTwidditData=gql`
+query infoTwiddit($twidditId: String!){
+  infoTwiddit(twidditId:$twidditId){
+    number_of_likes
+    number_of_replies
   }
 }
 `
