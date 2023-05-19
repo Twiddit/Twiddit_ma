@@ -28,11 +28,40 @@ export default function NewTwiddit (props) {
 
     
     const [imageUri,setimageUri] = useState("");
+    const [userId,setuserId] = useState();
     const [text,settext] = useState("");
     const [imageURL1,setimageURL1] = useState("");
     const [imageURL2,setimageURL2] = useState("");
     const [imageURL3,setimageURL3] = useState("");
     const [imageURL4,setimageURL4] = useState("");
+
+    const getAuth = async () => {
+      try {
+
+        const value = await AsyncStorage.getItem("Authorization")
+
+        if(value !== null) {
+          console.log(value)
+          return value
+        }
+      } catch(e) {
+        // error reading value
+        console.log(e)
+      }
+    }
+
+    const getUserID = async () => {
+      try {
+        const value = await AsyncStorage.getItem("UserID")
+
+        if(value !== null) {
+          setuserId(JSON.parse(value))
+          return value
+        }
+      } catch(e) {
+        // error reading value
+      }
+    }
 
     const openCamera= async () =>{
         let options ={
@@ -68,7 +97,7 @@ export default function NewTwiddit (props) {
 
     const [runMutation, {dataModifyTwiddit, errorModifyTwiddit}] = useMutation(newTwiddit, {
       variables: {
-        userId: 1,
+        userId: userId,
         text: text, 
         creationDate: new Date(), 
         imageURL1: imageURL1,
@@ -88,6 +117,10 @@ export default function NewTwiddit (props) {
       }
     })
 
+    useEffect(() => {
+      getUserID()
+    }, [])
+
     return (
       
       <Block flex middle>
@@ -104,7 +137,7 @@ export default function NewTwiddit (props) {
               <Block flex>
                 <Block flex={0.17} middle>
                   <Text color="#8898AA" size={13}>
-                    
+                    {userId}
                   </Text>
                 </Block>
                 <Block flex center>
@@ -116,6 +149,12 @@ export default function NewTwiddit (props) {
                     <Block width={width * 0.8}>
                       <Input
                         borderless
+                        style={{
+                          height: 200,
+                          margin: 10,
+                          borderWidth: 1,
+                          padding: 10,
+                        }}
                         placeholder="What's happening?"
                         onChangeText={text => settext(text)}
                         iconContent={

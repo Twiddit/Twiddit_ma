@@ -18,6 +18,8 @@ import Register from "../screens/Register";
 import Login from "../screens/Login";
 import Twiddit from "../screens/Twiddit";
 import Communiddits from "../screens/Communiddits";
+import Newtwiddit from "../screens/Newtwiddit";
+import Notifications from "../screens/Notifications";
 
 import ChangePassword from "../screens/ChangePassword";
 import EditProfile from "../screens/EditProfile";
