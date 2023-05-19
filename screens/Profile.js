@@ -6,7 +6,8 @@ import {
   Image,
   ImageBackground,
   FlatList,
-  Platform
+  Platform,
+  VirtualizedList
 } from "react-native";
 import { Block, Text, theme } from "galio-framework";
 
@@ -14,8 +15,8 @@ import { Button, Twiddit, Icon } from "../components";
 import { Images, argonTheme } from "../constants";
 import { HeaderHeight } from "../constants/utils";
 import articles from '../constants/articles';
-import { userProfileData, userTwiddits } from "../gql/queries";
-import { useQuery } from "@apollo/client";
+import { userProfileData, userTwiddits, getSingleTwidditData } from "../gql/queries";
+import { useQuery, useLazyQuery } from "@apollo/client";
 
 const { width, height } = Dimensions.get("screen");
 
@@ -24,36 +25,64 @@ const thumbMeasure = (width - 48 - 32) / 3;
 export default function Profile (props) {
   const { navigation } = props;
   const [userId, setuserId] = useState(1)
-
+  const [feed, setFeed] = useState([])
+  const [twidditId, setTwidditId] = useState("")
+  const [twidditLikesInfo, setTwidditLikesInfo] = useState(1)
+  const [twidditRepliesInfo, setTwidditRepliesInfo] = useState(1)
+  
+  // Query for user profile data
   const {data, loading, error} = useQuery(userProfileData, {
     variables: {
       userId: 1, 
     },
     enabled:false,
     onCompleted:(data) => {
-      // console.log(data)
+      console.log(data)
     },
     onError(error){
       console.log(error)
     }
   })
 
+  // Query for users twiddits
   const {dataMyTwiddits, loadingTwiddits, errorMyTwiddits} = useQuery(userTwiddits, {
     variables: {
       userId: 1, 
     },
     enabled:false,
     onCompleted:(dataMyTwiddits) => {
-      console.log(dataMyTwiddits.myTwiddits.twiddit)
+      // console.log(dataMyTwiddits.myTwiddits.twiddit)
+      setFeed(dataMyTwiddits.myTwiddits.twiddit)
     },
-    onError(error){
-      console.log(error)
+    onError(errorMyTwiddits){
+      console.log(errorMyTwiddits)
     }
   })
 
- 
 
-  if (!loading && !loadingTwiddits) {
+
+  if (loading){
+    return (
+      <Text>Loading</Text>
+    );
+  }
+
+  if (!loading && !loadingTwiddits && feed.length > 0) {
+    let itemIndexData=-1;
+    const getItemData = (_data, index) => {
+      itemIndexData += 1;
+      console.log(feed[itemIndexData])
+      return feed[itemIndexData]
+    };
+
+    const getTwidditInfo = (twidditId) => {
+      setTwidditId(twidditId)
+      runTwidditInfoQuery()
+      return 0 
+    }
+
+
+    const getItemCountData = _data => 1;
     return (
       <Block flex style={styles.profile}>
         <Block flex>
@@ -64,7 +93,7 @@ export default function Profile (props) {
           >
             <ScrollView
               showsVerticalScrollIndicator={false}
-              style={{ width, marginTop: '25%' }}
+              style={{ width, marginTop: '25%', height }}
             >
               <Block flex style={styles.profileCard}>
                 <Block middle style={styles.avatarContainer}>
@@ -90,7 +119,7 @@ export default function Profile (props) {
                     <Button
                       small
                       style={{ backgroundColor: "#d10a30", width: 100 }}
-                      onPress={() => navigation.navigate('EditProfile')}
+                      onPress={() => navigation.navigate('Notifications')}
                     >
                       <Icon
                             size={16}
@@ -110,9 +139,9 @@ export default function Profile (props) {
                         color="#525F7F"
                         style={{ marginBottom: 4 }}
                       >
-                        #
+                        
                       </Text>
-                      <Text size={12} color={argonTheme.COLORS.TEXT}>Twiddits</Text>
+                      <Text size={12} color={argonTheme.COLORS.TEXT}></Text>
                     </Block>
                     
                     <Block middle>
@@ -125,6 +154,17 @@ export default function Profile (props) {
                         2K
                       </Text>
                       <Text size={12} color={argonTheme.COLORS.TEXT}>Followers</Text>
+                    </Block>
+                    <Block middle>
+                      <Text
+                        bold
+                        size={18}
+                        color="#525F7F"
+                        style={{ marginBottom: 4 }}
+                      >
+                        
+                      </Text>
+                      <Text size={12} color={argonTheme.COLORS.TEXT}></Text>
                     </Block>
                   </Block>
                 </Block>
@@ -155,14 +195,59 @@ export default function Profile (props) {
                       {data.viewProfile.description}
                     </Text>
                   </Block>
-                  
                 </Block>
               </Block>
+      
             </ScrollView>
+            
+            <FlatList
+                data={feed}
+                renderItem={({item}) => 
+                <Block style={styles.twidditsContainer}>
+                  <Text size={14} style={styles.cardTitle}>@{data.viewProfile.username}</Text>
+                  <Text size={12} >{item.twiddit.text}</Text>
+                  <Text size={10} color={argonTheme.COLORS.ACTIVE} bold>{item.twiddit.tags}</Text>
+                  
+                    <Block row flex={0.25} middle style={styles.socialConnect}>
+                      <Block flex center>
+                          <Button small center color="default" style={styles.twidditButton}>
+                              <Block row>
+                                  <Icon
+                                      size={12}
+                                      color={argonTheme.COLORS.WHITE}
+                                      name="ic_mail_24px"
+                                      family="ArgonExtra"
+                                  />
+                                  <Text style={styles.twidditInteractions}> {item.number_of_replies}</Text>
+                              </Block>
+                          </Button>
+                      </Block>
+                      <Block flex center>
+                          <Button small center color="default" style={styles.twidditButton}>
+                              <Block row>
+                                  <Icon
+                                      size={12}
+                                      color={argonTheme.COLORS.WHITE}
+                                      name="diamond"
+                                      family="ArgonExtra"
+                                  />
+                                  <Text style={styles.twidditInteractions}> {item.number_of_likes}</Text>
+                              </Block>
+                          </Button>
+                      </Block>
+              </Block>
+            </Block>
+          
+                
+              }
+                keyExtractor={item => item.twiddit._id}
+              />
+            
           </ImageBackground>
           
         </Block>
         {}
+        
       </Block>
       
     );
@@ -336,6 +421,21 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     zIndex: 2
   },
+  twidditsContainer: {
+    // position: "relative",
+    padding: theme.SIZES.BASE,
+    marginHorizontal: theme.SIZES.BASE,
+    marginBottom: 10,
+    marginTop:0,
+    borderTopLeftRadius: 6,
+    borderTopRightRadius: 6,
+    backgroundColor: theme.COLORS.WHITE,
+    shadowColor: "black",
+    shadowOffset: { width: 0, height: 0 },
+    shadowRadius: 8,
+    shadowOpacity: 0.2,
+    zIndex: 2
+  },
   info: {
     paddingHorizontal: 40
   },
@@ -357,11 +457,70 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#E9ECEF"
   },
+  twidditButton: {
+    backgroundColor: "#d10a30"
+  },
+  twidditInteractions: {
+    color: argonTheme.COLORS.WHITE,
+    fontSize:12,
+  },
   thumb: {
     borderRadius: 4,
     marginVertical: 4,
     alignSelf: "center",
     width: thumbMeasure,
     height: thumbMeasure
+  },
+
+  card: {
+    backgroundColor: theme.COLORS.WHITE,
+    marginVertical: theme.SIZES.BASE,
+    borderWidth: 0,
+    minHeight: 114,
+    marginBottom: 16
+  },
+  cardTitle: {
+    flex: 1,
+    flexWrap: 'wrap',
+    paddingBottom: 6,
+    fontWeight:100
+  },
+  cardDescription: {
+    padding: theme.SIZES.BASE / 2
+  },
+  imageContainer: {
+    borderRadius: 3,
+    elevation: 1,
+    overflow: 'hidden',
+  },
+  image: {
+    // borderRadius: 3,
+  },
+  horizontalImage: {
+    height: 122,
+    width: 'auto',
+  },
+  horizontalStyles: {
+    borderTopRightRadius: 0,
+    borderBottomRightRadius: 0,
+  },
+  verticalStyles: {
+    borderBottomRightRadius: 0,
+    borderBottomLeftRadius: 0
+  },
+  fullImage: {
+    height: 215
+  },
+  shadow: {
+    shadowColor: theme.COLORS.BLACK,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
+    shadowOpacity: 0.1,
+    elevation: 2,
+  },
+  socialConnect: {
+    backgroundColor: argonTheme.COLORS.WHITE,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderColor: "#8898AA"
   }
 });

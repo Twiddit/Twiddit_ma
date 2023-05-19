@@ -86,7 +86,7 @@ export default function EditProfile (props){
                     <Block width={width * 0.8}>
                       <Input
                         borderless
-                        placeholder={data.viewProfile.email}
+                        defaultValue={data.viewProfile.email}
                         onChangeText={newEmail => setEmail(newEmail)}
                         iconContent={
                           <Icon
@@ -103,7 +103,7 @@ export default function EditProfile (props){
                     <Block width={width * 0.8}>
                       <Input
                         borderless
-                        placeholder={data.viewProfile.phone}
+                        defaultValue={data.viewProfile.phone}
                         onChangeText={newPhone => setPhone(newPhone)}
                         iconContent={
                           <Icon
@@ -120,7 +120,7 @@ export default function EditProfile (props){
                     <Block width={width * 0.8} style={{ marginBottom: 15 }}>
                       <Input
                         borderless
-                        placeholder={data.viewProfile.description}
+                        defaultValue={data.viewProfile.description}
                         onChangeText={newDescription => setDescription(newDescription)}
                         iconContent={
                           <Icon

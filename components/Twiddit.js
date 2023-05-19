@@ -33,8 +33,8 @@ class Twiddit extends React.Component {
         </TouchableWithoutFeedback>
         <TouchableWithoutFeedback onPress={() => navigation.navigate('Pro')}>
           <Block flex space="between" style={styles.cardDescription}>
-            <Text size={14} style={styles.cardTitle}>username</Text>
-            <Text size={14} style={styles.cardTitle}>texto del twiddit</Text>
+            <Text size={14} style={styles.cardTitle}>Username</Text>
+            <Text size={14} style={styles.cardTitle}>{item.text}</Text>
             <Text size={12} muted={!ctaColor} color={ctaColor || argonTheme.COLORS.ACTIVE} bold>xd</Text>
             <Block row flex={0.25} middle style={styles.socialConnect}>
                 <Block flex left>

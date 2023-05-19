@@ -18,7 +18,6 @@ import Register from "../screens/Register";
 import Login from "../screens/Login";
 import Twiddit from "../screens/Twiddit";
 import Communiddits from "../screens/Communiddits";
-import Newtwiddit from "../screens/Newtwiddit";
 
 import ChangePassword from "../screens/ChangePassword";
 import EditProfile from "../screens/EditProfile";
@@ -167,8 +166,7 @@ export default function OnboardingStack(props) {
       <Stack.Screen name="Communiddits" component={Communiddits} />
       <Stack.Screen name="Newtwiddit" component={Newtwiddit} />
       <Stack.Screen name="Twiddit" component={Twiddit} />
-
-      <Stack.Screen name="ChangePassword" component={ChangePassword} />
+      <Stack.Screen name="Notifications" component={Notifications} />
       <Stack.Screen name="EditProfile" component={EditProfile} />
     </Stack.Navigator>
   );
