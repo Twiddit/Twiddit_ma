@@ -10,7 +10,7 @@ import { argonTheme } from '../constants';
 class Card extends React.Component {
   render() {
     const { navigation, user, twiddit, horizontal, full, style, ctaColor, imageStyle } = this.props;
-    
+
     const imageStyles = [
       full ? styles.fullImage : styles.horizontalImage,
       imageStyle

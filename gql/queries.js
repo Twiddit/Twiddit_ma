@@ -70,6 +70,7 @@ query userFeed($userId: Int!){
     }
     twiddit {
       twiddit {
+        _id
         communidditsId
         retwidditId
         text
@@ -80,6 +81,7 @@ query userFeed($userId: Int!){
         videoURL
       }
       number_of_replies
+      number_of_likes
     }
   }
 }
@@ -164,6 +166,34 @@ query infoTwiddit($twidditId: String!){
   infoTwiddit(twidditId:$twidditId){
     number_of_likes
     number_of_replies
+  }
+}
+`
+
+export const likesTwiddit = gql`
+query likesTwiddit($twidditId: String!){
+  likesTwiddit(twidditId:$twidditId){
+    _id
+    userId
+    twidditId
+    creationDate
+    replyId
+  }
+}
+`
+
+export const likeTwiddit = gql`
+mutation createLike($userId: Int!, $twidditId:String!, $creationDate: String!){
+  createLike(like: {userId: $userId, twidditId: $twidditId, creationDate: $creationDate}){
+      _id
+  }
+}
+`
+
+export const deleteLikeTwiddit = gql`
+mutation deleteLike($likeId: String!){
+  deleteLike(likeId: $likeId){
+      userId
   }
 }
 `

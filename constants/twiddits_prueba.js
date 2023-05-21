@@ -1,48 +1,48 @@
-export default [
-    {
+export default {
+  "data": {
+    "userFeed": [
+      {
         "user": {
-            "username": "joviedog"
+          "username": "joviedog"
         },
-        twiddit: [
-            {
-                "twiddit": {
-                  "_id": "64227023f68242e3c447d890",
-                  "creationDate": "2023-03-29T02:00:27.350Z",
-                  "userId": 2,
-                  "text": "Este es un retwiddit"
-                }
-              },
-              {
-                "twiddit": {
-                  "_id": "6461bc9d03e25e146597d4e0",
-                  "creationDate": "2023-03-29T02:00:27.350Z",
-                  "userId": 2,
-                  "text": "Este es un twiddit"
-                }
+        "twiddit": [
+          {
+            "twiddit": {
+              "_id": "64227023f68242e3c447d890",
+              "userId": 2,
+              "text": "Este es un retwiddit"
             }
-        ]
-    },
-    {
-        "user": {
-            "username": "ccordero"
-        },
-        twiddit: [
-            {
-                "twiddit": {
-                  "_id": "64227023f68242e3c447d890",
-                  "creationDate": "2023-03-29T02:00:27.350Z",
-                  "userId": 2,
-                  "text": "Este es un retwiddit de ccordero"
-                }
-              },
-              {
-                "twiddit": {
-                  "_id": "6461bc9d03e25e146597d4e0",
-                  "creationDate": "2023-03-29T02:00:27.350Z",
-                  "userId": 2,
-                  "text": "Este es un twiddit de ccordero"
-                }
+          },
+          {
+            "twiddit": {
+              "_id": "6461bc9d03e25e146597d4e0",
+              "userId": 2,
+              "text": "Este es un twiddit"
             }
+          },
+          {
+            "twiddit": {
+              "_id": "6462f886308356499e41c7c9",
+              "userId": 2,
+              "text": "Esto lo twidditeo una tortuga ninja"
+            }
+          },
+          {
+            "twiddit": {
+              "_id": "6462ffa1308356499e41c7cb",
+              "userId": 2,
+              "text": "Este es un retwiddit de otra tortuga"
+            }
+          },
+          {
+            "twiddit": {
+              "_id": "646701530d79cba309b4f846",
+              "userId": 2,
+              "text": "Test con id"
+            }
+          }
         ]
-    }
-]
+      }
+    ]
+  }
+}
