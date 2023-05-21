@@ -6,13 +6,14 @@ import {
   StatusBar,
   KeyboardAvoidingView,
   PermissionsAndroid,
-  Image
+  Image,
+  FlatList
 } from "react-native";
 
 
 
 import { Block, Checkbox, Text, theme } from "galio-framework";
-//import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import * as ImagePicker from 'expo-image-picker';
 import * as DocumentPicker from 'expo-document-picker';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -28,14 +29,11 @@ const { width, height } = Dimensions.get("screen");
 
 export default function NewTwiddit (props) {
 
-    
-    const [imageUri,setimageUri] = useState("");
+    const { navigation } = props;
     const [userId,setuserId] = useState();
     const [text,settext] = useState("");
-    const [imageURL1,setimageURL1] = useState("");
-    const [imageURL2,setimageURL2] = useState("");
-    const [imageURL3,setimageURL3] = useState("");
-    const [imageURL4,setimageURL4] = useState("");
+    const [images,setimages] = useState([]);
+    const [imageURL,setimageURL] = useState([]);
 
     const [singleFile, setSingleFile] = useState(null);
 
@@ -66,42 +64,6 @@ export default function NewTwiddit (props) {
         // error reading value
       }
     }
-
-    const checkPermissions = async () => {
-      try {
-        const result = await PermissionsAndroid.check(
-          PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE
-        );
-  
-        if (!result) {
-          const granted = await PermissionsAndroid.request(
-            PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-            {
-              title:
-                'You need to give storage permission to download and save the file',
-              message: 'App needs access to your camera ',
-              buttonNeutral: 'Ask Me Later',
-              buttonNegative: 'Cancel',
-              buttonPositive: 'OK',
-            }
-          );
-          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-            console.log('You can use the camera');
-            return true;
-          } else {
-            Alert.alert('Error', I18n.t('PERMISSION_ACCESS_FILE'));
-  
-            console.log('Camera permission denied');
-            return false;
-          }
-        } else {
-          return true;
-        }
-      } catch (err) {
-        console.warn(err);
-        return false;
-      }
-    };
 
     const uploadImage = async () => {
       const BASE_URL = 'xxxx';
@@ -145,60 +107,30 @@ export default function NewTwiddit (props) {
       }
     };
   
-    async function selectFile() {
-      try {
-        const result = await checkPermissions();
+
+    const pickImage = async () => {
+      // No permissions request is necessary for launching the image library
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsMultipleSelection: true,
+        selectionLimit: 4,
+        //allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
   
-        if (result) {
-          const result = await DocumentPicker.getDocumentAsync({
-            copyToCacheDirectory: false,
-            type: 'image/*',
-          });
+      console.log(result);
   
-          if (result.type === 'success') {
-            // Printing the log realted to the file
-            console.log('res : ' + JSON.stringify(result));
-            // Setting the state to show single file attributes
-            setSingleFile(result);
-          }
+      if (!result.canceled) {
+        setimages(result.assets);
+        let uris = [];
+        for (const image of result.assets ){
+          uris.push(image.uri)
         }
-      } catch (err) {
-        setSingleFile(null);
-        console.warn(err);
-        return false;
+        setimageURL(uris)
+      }else{
+        alert("Image load cancelled")
       }
-    }
-
-    const openCamera= async () =>{
-        let options ={
-            storageOptions:{
-                path:"image"
-            },
-            mediaType: 'photo',
-            includeBase64: true
-        };
-        try{
-            const doc = await launchCamera(options);
-            console.log(doc)
-        }catch(err){
-           // if(DocumentPicker.isCancel(e)){
-           //     console.log("User cancelled the upload",e);
-           // }else{
-                console.log(err);
-           // }
-        }
-        
-        
-    };
-
-    const openLibrary= async () =>{
-        let options ={
-            mediaType: 'photo',
-            includeBase64: true
-        };
-        const result = await launchImageLibrary(options);
-        
-        setimageUri(result.assets[0].base64);
     };
 
     const [runMutation, {dataModifyTwiddit, errorModifyTwiddit}] = useMutation(newTwiddit, {
@@ -206,15 +138,15 @@ export default function NewTwiddit (props) {
         userId: userId,
         text: text, 
         creationDate: new Date(), 
-        imageURL1: imageURL1,
-        imageURL2: imageURL2,
-        imageURL3: imageURL3,
-        imageURL4: imageURL4
+        imageURL1: imageURL[0] ? imageURL[0] : "",
+        imageURL2: imageURL[1] ? imageURL[1] : "",
+        imageURL3: imageURL[2] ? imageURL[2] : "",
+        imageURL4: imageURL[3] ? imageURL[3] : ""
       },
       enabled:false,
       onCompleted:(dataModifyTwiddit) => {
         console.log(dataModifyTwiddit)  
-        navigation.navigate("newTwiddit")
+        navigation.navigate("Home")
         
         
       },
@@ -222,6 +154,7 @@ export default function NewTwiddit (props) {
         console.log(errorModifyTwiddit)
       }
     })
+
 
     useEffect(() => {
       getUserID()
@@ -242,8 +175,8 @@ export default function NewTwiddit (props) {
               </Block>
               <Block flex>
                 <Block flex={0.17} middle>
-                  <Text color="#8898AA" size={13}>
-                    {userId}
+                  <Text color="#8898AA" size={20}>
+                    Share your thoughts
                   </Text>
                 </Block>
                 <Block flex center>
@@ -256,11 +189,9 @@ export default function NewTwiddit (props) {
                       <Input
                         borderless
                         style={{
-                          height: 200,
-                          margin: 10,
-                          borderWidth: 1,
-                          padding: 10,
+                          height:70
                         }}
+                        multiline
                         placeholder="What's happening?"
                         onChangeText={text => settext(text)}
                         iconContent={
@@ -274,12 +205,23 @@ export default function NewTwiddit (props) {
                         }
                       />
                     </Block>
-                    <Block>
-                        <Image source={imageUri}/>
-                    </Block>
-                    <Block width={width * 0.8} style={{flexDirection:"row"}}>
-                        <Button color="primary" onPress={() => {
-                            selectFile();
+                    
+                      <FlatList
+                        data={imageURL}
+                        horizontal={true}
+                        renderItem={({item}) =>(
+                            <Image source={{uri: item}} style={{
+                              width:70,
+                              height:50
+                            }}/>
+                        )}
+                        keyExtractor={(item)=>item}
+                      />
+                    
+                    <Block middle>
+                        
+                        <Button color="primary" style={styles.createButton} onPress={() => {
+                            pickImage();
                         }}>
                             <Icon
                             size={16}
