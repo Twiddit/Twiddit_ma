@@ -27,6 +27,7 @@ export default function Notifications (props){
     let followers = []
     const [notification, setNotification] = useState([])
     const [followerId, setFollowerId] = useState(1)
+    const [username, setUsername] = useState("USUARIO DE PRUEBA")
     
     const {data, loading, error} = useQuery(viewNotifications, {
         variables: {
@@ -54,6 +55,7 @@ export default function Notifications (props){
         console.log(error)
       }
     })
+
 
 
 
@@ -86,7 +88,7 @@ export default function Notifications (props){
                     
                     <FlatList
                       data={data.viewNotifications}
-                      renderItem={({item}) => <Block flex style={styles.twidditsContainer}><Text>{item.followerId} started following you</Text></Block>
+                      renderItem={({item}) => <Block flex style={styles.twidditsContainer}><Text> started following you</Text></Block>
                       }
                       keyExtractor={item => item.followerId}
                     />

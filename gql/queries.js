@@ -119,6 +119,7 @@ query MyTwiddits($userId: Int!){
 
         number_of_likes
         number_of_replies
+        number_of_dislikes
       }
     }
 }
@@ -153,8 +154,7 @@ query communidditFeed($communidditId:Int!){
 export const viewNotifications=gql`
 query viewNotifications($userId: Int!){
   viewNotifications(id: $userId){
-      followerId
-      followedId
+      followerUsername
   }
 }
 
@@ -165,5 +165,22 @@ query infoTwiddit($twidditId: String!){
     number_of_likes
     number_of_replies
   }
+}
+`
+
+export const getFollowerNumber=gql`
+query numberFollowers($followedId: Int!){
+	numberFollowers(followedId: $followedId){
+		numberFollowers
+}
+}
+
+`
+
+export const getFollowedNumber=gql`
+query numberFollowing($followerId: Int!){
+	numberFollowing(followerId: $followerId){
+		numberFollowing
+}
 }
 `

@@ -15,7 +15,7 @@ import { Button, Twiddit, Icon } from "../components";
 import { Images, argonTheme } from "../constants";
 import { HeaderHeight } from "../constants/utils";
 import articles from '../constants/articles';
-import { userProfileData, userTwiddits, getSingleTwidditData } from "../gql/queries";
+import { userProfileData, userTwiddits, getSingleTwidditData, getFollowerNumber, getFollowedNumber } from "../gql/queries";
 import { useQuery, useLazyQuery } from "@apollo/client";
 
 const { width, height } = Dimensions.get("screen");
@@ -26,9 +26,8 @@ export default function Profile (props) {
   const { navigation } = props;
   const [userId, setuserId] = useState(1)
   const [feed, setFeed] = useState([])
-  const [twidditId, setTwidditId] = useState("")
-  const [twidditLikesInfo, setTwidditLikesInfo] = useState(1)
-  const [twidditRepliesInfo, setTwidditRepliesInfo] = useState(1)
+  const [followerNumber, setFollowerNumber] = useState(0)
+  const [followedNumber, setFollowedNumber] = useState(0)
   
   // Query for user profile data
   const {data, loading, error} = useQuery(userProfileData, {
@@ -41,6 +40,38 @@ export default function Profile (props) {
     },
     onError(error){
       console.log(error)
+    }
+  })
+
+  // Query for number of followers
+  const {dataFollowers, loadingFollowers, errorFollowers} = useQuery(getFollowerNumber, {
+    variables: {
+      followedId: 2, 
+    },
+    enabled:false,
+    onCompleted:(dataFollowers) => {
+      console.log("Cuentas que siguen al usuario")
+      console.log(dataFollowers)
+      setFollowerNumber(dataFollowers.numberFollowers.numberFollowers)
+    },
+    onError(error){
+      console.log(errorFollowers)
+    }
+  })
+
+  // Query for number of followed accounts
+  const {dataFollowed, loadingFollowed, errorFollowed} = useQuery(getFollowedNumber, {
+    variables: {
+      followerId: 1, 
+    },
+    enabled:false,
+    onCompleted:(dataFollowed) => {
+      console.log("Cuentas que sigue el usuario")
+      console.log(dataFollowed)
+      setFollowedNumber(dataFollowed.numberFollowing.numberFollowing)
+    },
+    onError(errorFollowed){
+      console.log(errorFollowed)
     }
   })
 
@@ -61,13 +92,13 @@ export default function Profile (props) {
 
 
 
-  if (loading){
+  if (loading && loadingTwiddits && loadingFollowers && loadingFollowed){
     return (
       <Text>Loading</Text>
     );
   }
 
-  if (!loading && !loadingTwiddits && feed.length > 0) {
+  if (!loading && !loadingTwiddits && feed.length > 0 && !loadingFollowers && !loadingFollowed) {
     let itemIndexData=-1;
     const getItemData = (_data, index) => {
       itemIndexData += 1;
@@ -151,9 +182,21 @@ export default function Profile (props) {
                         size={18}
                         style={{ marginBottom: 4 }}
                       >
-                        2K
+                        {followerNumber}
                       </Text>
                       <Text size={12} color={argonTheme.COLORS.TEXT}>Followers</Text>
+                    </Block>
+
+                    <Block middle>
+                      <Text
+                        bold
+                        color="#525F7F"
+                        size={18}
+                        style={{ marginBottom: 4 }}
+                      >
+                        {followedNumber}
+                      </Text>
+                      <Text size={12} color={argonTheme.COLORS.TEXT}>Followed</Text>
                     </Block>
                     <Block middle>
                       <Text
@@ -209,7 +252,7 @@ export default function Profile (props) {
                   <Text size={10} color={argonTheme.COLORS.ACTIVE} bold>{item.twiddit.tags}</Text>
                   
                     <Block row flex={0.25} middle style={styles.socialConnect}>
-                      <Block flex center>
+                      <Block flex left>
                           <Button small center color="default" style={styles.twidditButton}>
                               <Block row>
                                   <Icon
@@ -232,6 +275,19 @@ export default function Profile (props) {
                                       family="ArgonExtra"
                                   />
                                   <Text style={styles.twidditInteractions}> {item.number_of_likes}</Text>
+                              </Block>
+                          </Button>
+                      </Block>
+                      <Block flex right>
+                          <Button small center color="default" style={styles.twidditButton}>
+                              <Block row>
+                                  <Icon
+                                      size={12}
+                                      color={argonTheme.COLORS.WHITE}
+                                      name="nav-right"
+                                      family="ArgonExtra"
+                                  />
+                                  <Text style={styles.twidditInteractions}> {item.number_of_dislikes}</Text>
                               </Block>
                           </Button>
                       </Block>
