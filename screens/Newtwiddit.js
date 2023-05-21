@@ -4,14 +4,16 @@ import {
   ImageBackground,
   Dimensions,
   StatusBar,
-  KeyboardAvoidingView, 
+  KeyboardAvoidingView,
+  PermissionsAndroid,
   Image
 } from "react-native";
 
 
 
 import { Block, Checkbox, Text, theme } from "galio-framework";
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+//import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import * as DocumentPicker from 'expo-document-picker';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useLazyQuery } from "@apollo/client";
@@ -34,6 +36,8 @@ export default function NewTwiddit (props) {
     const [imageURL2,setimageURL2] = useState("");
     const [imageURL3,setimageURL3] = useState("");
     const [imageURL4,setimageURL4] = useState("");
+
+    const [singleFile, setSingleFile] = useState(null);
 
     const getAuth = async () => {
       try {
@@ -60,6 +64,108 @@ export default function NewTwiddit (props) {
         }
       } catch(e) {
         // error reading value
+      }
+    }
+
+    const checkPermissions = async () => {
+      try {
+        const result = await PermissionsAndroid.check(
+          PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE
+        );
+  
+        if (!result) {
+          const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+            {
+              title:
+                'You need to give storage permission to download and save the file',
+              message: 'App needs access to your camera ',
+              buttonNeutral: 'Ask Me Later',
+              buttonNegative: 'Cancel',
+              buttonPositive: 'OK',
+            }
+          );
+          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+            console.log('You can use the camera');
+            return true;
+          } else {
+            Alert.alert('Error', I18n.t('PERMISSION_ACCESS_FILE'));
+  
+            console.log('Camera permission denied');
+            return false;
+          }
+        } else {
+          return true;
+        }
+      } catch (err) {
+        console.warn(err);
+        return false;
+      }
+    };
+
+    const uploadImage = async () => {
+      const BASE_URL = 'xxxx';
+  
+      // Check if any file is selected or not
+      if (singleFile != null) {
+        // If file selected then create FormData
+        const data = new FormData();
+  
+        data.append('file_attachment', {
+          uri: singleFile.uri,
+          name: singleFile.name,
+          type: singleFile.mimeType,
+        });
+  
+        // return
+        try {
+          let res = await fetch(BASE_URL + 'tutorial/upload.php', {
+            method: 'post',
+            body: data,
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'multipart/form-data',
+            },
+            timeout: 5000,
+          });
+  
+          let result = await res.json();
+          console.log('result', result);
+          if (result.status == 1) {
+            Alert.alert('Info', result.msg);
+          }
+        } catch (error) {
+          // Error retrieving data
+          // Alert.alert('Error', error.message);
+          console.log('error upload', error);
+        }
+      } else {
+        // If no file selected the show alert
+        Alert.alert('Please Select File first');
+      }
+    };
+  
+    async function selectFile() {
+      try {
+        const result = await checkPermissions();
+  
+        if (result) {
+          const result = await DocumentPicker.getDocumentAsync({
+            copyToCacheDirectory: false,
+            type: 'image/*',
+          });
+  
+          if (result.type === 'success') {
+            // Printing the log realted to the file
+            console.log('res : ' + JSON.stringify(result));
+            // Setting the state to show single file attributes
+            setSingleFile(result);
+          }
+        }
+      } catch (err) {
+        setSingleFile(null);
+        console.warn(err);
+        return false;
       }
     }
 
@@ -173,7 +279,7 @@ export default function NewTwiddit (props) {
                     </Block>
                     <Block width={width * 0.8} style={{flexDirection:"row"}}>
                         <Button color="primary" onPress={() => {
-                            openCamera();
+                            selectFile();
                         }}>
                             <Icon
                             size={16}
