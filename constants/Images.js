@@ -44,5 +44,5 @@ export default {
   iOSLogo,
   androidLogo, 
   twidditLogo,
-  twidditFilledLogo
+  twidditFilledLogo,
 };

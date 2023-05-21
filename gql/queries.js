@@ -121,6 +121,7 @@ query MyTwiddits($userId: Int!){
 
         number_of_likes
         number_of_replies
+        number_of_dislikes
       }
     }
 }
@@ -155,8 +156,7 @@ query communidditFeed($communidditId:Int!){
 export const viewNotifications=gql`
 query viewNotifications($userId: Int!){
   viewNotifications(id: $userId){
-      followerId
-      followedId
+      followerUsername
   }
 }
 
@@ -170,30 +170,35 @@ query infoTwiddit($twidditId: String!){
 }
 `
 
-export const likesTwiddit = gql`
-query likesTwiddit($twidditId: String!){
-  likesTwiddit(twidditId:$twidditId){
+export const getFollowerNumber=gql`
+query numberFollowers($followedId: Int!){
+	numberFollowers(followedId: $followedId){
+		numberFollowers
+}
+}
+
+`
+
+export const getFollowedNumber=gql`
+query numberFollowing($followerId: Int!){
+	numberFollowing(followerId: $followerId){
+		numberFollowing
+}
+}
+`
+export const newTwiddit=gql`
+mutation createTwiddit($userId: Int!, $text:String!, $creationDate:String!, $imageURL1: String!, $imageURL2: String!, $imageURL3: String!, $imageURL4: String!){
+  createTwiddit(twiddit: {
+    userId: $userId,
+    text: $text,
+    creationDate: $creationDate,
+    imageURL1: $imageURL1,
+    imageURL2: $imageURL2,
+    imageURL3: $imageURL3,
+    imageURL4: $imageURL4
+	}){
     _id
-    userId
-    twidditId
-    creationDate
-    replyId
+    text
+    retwidditId
   }
-}
-`
-
-export const likeTwiddit = gql`
-mutation createLike($userId: Int!, $twidditId:String!, $creationDate: String!){
-  createLike(like: {userId: $userId, twidditId: $twidditId, creationDate: $creationDate}){
-      _id
-  }
-}
-`
-
-export const deleteLikeTwiddit = gql`
-mutation deleteLike($likeId: String!){
-  deleteLike(likeId: $likeId){
-      userId
-  }
-}
-`
+}`
