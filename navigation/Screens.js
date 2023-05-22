@@ -18,6 +18,7 @@ import Register from "../screens/Register";
 import Login from "../screens/Login";
 import Twiddit from "../screens/Twiddit";
 import Communiddits from "../screens/Communiddits";
+import ViewCommuniddits from "../screens/ViewCommuniddits";
 import Newtwiddit from "../screens/Newtwiddit";
 import Notifications from "../screens/Notifications";
 
@@ -147,6 +148,33 @@ function HomeStack(props) {
   );
 }
 
+function TwidditStack(props) {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        mode: "card",
+        headerShown: "screen",
+      }}
+    >
+      <Stack.Screen
+        name="Twiddit"
+        component={Twiddit}
+        options={{
+          header: ({ navigation, scene }) => (
+            <Header
+              title="Twiddits"
+              navigation={navigation}
+              scene={scene}
+            />
+          ),
+          cardStyle: { backgroundColor: "#F8F9FE" },
+        }}
+      />
+      
+    </Stack.Navigator>
+  );
+}
+
 export default function OnboardingStack(props) {
   return (
     <Stack.Navigator
@@ -166,6 +194,7 @@ export default function OnboardingStack(props) {
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Register" component={Register} />
       <Stack.Screen name="Communiddits" component={Communiddits} />
+      <Stack.Screen name="ViewCommuniddits" component={ViewCommuniddits} />
       <Stack.Screen name="Newtwiddit" component={Newtwiddit} />
       <Stack.Screen name="Twiddit" component={Twiddit} />
       <Stack.Screen name="Notifications" component={Notifications} />
@@ -223,6 +252,36 @@ export function CommunidditsStack(props) {
     </Stack.Navigator>
   );
 }
+
+export function ViewCommunidditsStack(props) {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        mode: "card",
+        headerShown: "screen",
+      }}
+    >
+      <Stack.Screen
+        name="ViewCommuniddits"
+        component={ViewCommuniddits}
+        options={{
+          header: ({ navigation, scene }) => (
+            <Header
+              title="ViewCommuniddits"
+              search
+              navigation={navigation}
+              scene={scene}
+            />
+          ),
+          cardStyle: { backgroundColor: "#F8F9FE" },
+        }}
+      />
+      
+    </Stack.Navigator>
+  );
+}
+
+
 
 export function NewtwidditStack(props) {
   return (
@@ -315,6 +374,20 @@ function AppStack(props) {
       <Drawer.Screen
         name="Communiddits"
         component={CommunidditsStack}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Drawer.Screen
+        name="ViewCommuniddits"
+        component={ViewCommunidditsStack}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Drawer.Screen
+        name="Twiddit"
+        component={TwidditStack}
         options={{
           headerShown: false,
         }}

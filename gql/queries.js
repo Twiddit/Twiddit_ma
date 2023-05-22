@@ -70,6 +70,7 @@ query userFeed($userId: Int!){
     }
     twiddit {
       twiddit {
+        _id
         communidditsId
         retwidditId
         text
@@ -80,6 +81,7 @@ query userFeed($userId: Int!){
         videoURL
       }
       number_of_replies
+      number_of_likes
     }
   }
 }
@@ -129,9 +131,22 @@ query MyTwiddits($userId: Int!){
 export const communidditsAll=gql`
 query{
   communidditsAll{
+    communidittId
     aboutUs
     name
+    members
   }
+}
+`
+
+export const addCommunidditmember=gql`
+mutation addCommunidditMember($communidditId: Int!, $userId: Int!){
+  addCommunidditMember(communidditId:$communidditId,userId:$userId)
+}
+`
+export const removeCommunidditMember=gql`
+mutation removeCommunidditMember($communidditId: Int!, $userId: Int!){
+  removeCommunidditMember(communidditId:$communidditId,userId:$userId)
 }
 `
 
@@ -200,3 +215,55 @@ mutation createTwiddit($userId: Int!, $text:String!, $creationDate:String!, $ima
     retwidditId
   }
 }`
+
+export const likesTwiddit = gql`
+query likesTwiddit($twidditId: String!){
+  likesTwiddit(twidditId:$twidditId){
+    _id
+    userId
+    twidditId
+    creationDate
+    replyId
+  }
+}
+`
+
+export const likeTwiddit = gql`
+mutation createLike($userId: Int!, $twidditId:String!, $creationDate: String!){
+  createLike(like: {userId: $userId, twidditId: $twidditId, creationDate: $creationDate}){
+      _id
+  }
+}
+`
+
+export const deleteLikeTwiddit = gql`
+mutation deleteLike($likeId: String!){
+  deleteLike(likeId: $likeId){
+      userId
+  }
+}
+`
+export const communidditFeedQuery = gql`
+query communidditsFeed($communidditId: Int!){
+  communidditsFeed(communidditId: $communidditId){
+    user{
+      username 
+    }
+    twiddit {
+      twiddit {
+        _id
+        communidditsId
+        retwidditId
+        text
+        imageURL1
+        imageURL2
+        imageURL3
+        imageURL4
+        videoURL
+      }
+      number_of_replies
+      number_of_likes
+    }
+  }
+}
+`
