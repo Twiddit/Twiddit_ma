@@ -19,6 +19,7 @@ import Login from "../screens/Login";
 import Twiddit from "../screens/Twiddit";
 import Communiddits from "../screens/Communiddits";
 import ViewCommuniddits from "../screens/ViewCommuniddits";
+import NewCommuniddit from "../screens/NewCommuniddit";
 import Newtwiddit from "../screens/Newtwiddit";
 import Notifications from "../screens/Notifications";
 import Reply from "../screens/Reply";
@@ -196,6 +197,7 @@ export default function OnboardingStack(props) {
       <Stack.Screen name="Register" component={Register} />
       <Stack.Screen name="Communiddits" component={Communiddits} />
       <Stack.Screen name="ViewCommuniddits" component={ViewCommuniddits} />
+      <Stack.Screen name="NewCommuniddit" component={NewCommuniddit} />
       <Stack.Screen name="Newtwiddit" component={Newtwiddit} />
       <Stack.Screen name="Reply" component={Reply} />
       <Stack.Screen name="Twiddit" component={TwidditStack} />
@@ -283,7 +285,33 @@ export function ViewCommunidditsStack(props) {
   );
 }
 
-
+export function NewCommunidditStack(props) {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        mode: "card",
+        headerShown: "screen",
+      }}
+    >
+      <Stack.Screen
+        name="NewCommuniddit"
+        component={NewCommuniddit}
+        options={{
+          header: ({ navigation, scene }) => (
+            <Header
+              title="NewCommuniddit"
+              search
+              navigation={navigation}
+              scene={scene}
+            />
+          ),
+          cardStyle: { backgroundColor: "#F8F9FE" },
+        }}
+      />
+      
+    </Stack.Navigator>
+  );
+}
 
 export function NewtwidditStack(props) {
   return (
@@ -416,8 +444,29 @@ function AppStack(props) {
         }}
       />
       <Drawer.Screen
+        name="NewCommuniddit"
+        component={NewCommunidditStack}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Drawer.Screen
+        name="Newtwiddit"
+        component={NewtwidditStack}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Drawer.Screen
         name="Twiddit"
         component={TwidditStack}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Drawer.Screen
+        name="Reply"
+        component={ReplyStack}
         options={{
           headerShown: false,
         }}

@@ -120,7 +120,22 @@ export default function Profile (props) {
     }
   })
 
-
+  //reply
+  const reply= (_id,user,textTwiddit)=>{
+    storeData("twidditId",_id)
+    storeData("user",user)
+    storeData("textTwiddit",textTwiddit)
+    navigation.navigate('Reply')
+  }
+  const storeData = async (key, value) => {
+    try {
+      const jsonValue = JSON.stringify(value)
+      await AsyncStorage.setItem(key, jsonValue)
+    } catch (e) {
+      console.log(e)
+      // saving error
+    }
+  }
 
   if (!cargando){
     return (
@@ -283,7 +298,7 @@ export default function Profile (props) {
                   
                     <Block row flex={0.25} middle style={styles.socialConnect}>
                       <Block flex left>
-                          <Button small center color="default" style={styles.twidditButton}>
+                          <Button small center color="default" style={styles.twidditButton}onPress={()=>{reply(item.twiddit._id, data.viewProfile.username, item.twiddit.text)}}>
                               <Block row>
                                   <Icon
                                       size={12}

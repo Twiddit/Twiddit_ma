@@ -24,7 +24,7 @@ let isLike = false
 
 
 export default function Twiddits (props)  {
-
+  const { navigation } = props;
   const [communidditFeed, setCommunidditFeed] = useState([]);
   const [communidditId, setCommunidditId] = useState(0)
   const [feedLoadnig, setFeedLoading] = useState(false)
@@ -152,6 +152,22 @@ export default function Twiddits (props)  {
     })
   }
 
+  const reply= (_id,user,textTwiddit)=>{
+    storeData("twidditId",_id)
+    storeData("user",user)
+    storeData("textTwiddit",textTwiddit)
+    navigation.navigate('Reply')
+  }
+  const storeData = async (key, value) => {
+    try {
+      const jsonValue = JSON.stringify(value)
+      await AsyncStorage.setItem(key, jsonValue)
+    } catch (e) {
+      console.log(e)
+      // saving error
+    }
+  }
+
 
   if (!feedLoadnig){
 
@@ -182,7 +198,7 @@ export default function Twiddits (props)  {
                   
                     <Block row flex={0.25} middle style={styles.socialConnect}>
                       <Block flex left>
-                          <Button small center color="default" style={styles.twidditButton}>
+                          <Button small center color="default" style={styles.twidditButton}onPress={()=>{reply(item.twiddit._id, dataR.user.username, item.twiddit.text)}}>
                               <Block row>
                                   <Icon
                                       size={12}
@@ -232,12 +248,24 @@ export default function Twiddits (props)  {
       }
   
         return (
-          
+          <Block>
+            <Block middle>
+                      <Button color="primary" style={styles.createButton}  onPress={() => {
+                        navigation.navigate("Newtwiddit")
+                      }}>
+                        <Text bold size={14} color={argonTheme.COLORS.WHITE}>
+                          New Twiddit
+                        </Text>
+                      </Button>
+            </Block>
             <FlatList
               data={communidditFeed}
               renderItem={({item}) => <Render dataR={item}/>}
               keyExtractor={item => item.user.username}
             />
+            
+
+            </Block>
           
         );
       }

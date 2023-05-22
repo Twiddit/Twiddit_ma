@@ -167,6 +167,16 @@ export default function Twiddits (props)  {
 
     return (
         
+          <Block style={styles.registerContainer}>
+            <Block middle>
+                      <Button color="primary" style={styles.createButton}  onPress={() => {
+                        navigation.navigate("NewCommuniddit")
+                      }}>
+                        <Text bold size={14} color={argonTheme.COLORS.WHITE}>
+                          New Communiddit
+                        </Text>
+                      </Button>
+            </Block>
           <FlatList
             data={communidditsList}
             renderItem={({item}) => 
@@ -183,7 +193,7 @@ export default function Twiddits (props)  {
           }
             keyExtractor={item => item.communidittId}
           />
-        
+        </Block>
       );
     }
   }
@@ -194,6 +204,7 @@ export default function Twiddits (props)  {
       // marginBottom: -HeaderHeight * 2,
       flex: 1
     },
+    
     profileContainer: {
       width: width,
       height: height,

@@ -138,6 +138,14 @@ query{
   }
 }
 `
+export const createCommuniddit=gql`
+mutation createCommuniddit($name: String!, $aboutUs:String!, $mods:[String!]){
+  createCommuniddit(communiddit: {
+    name: $name,
+    aboutUs: $aboutUs,
+    mods: $mods,
+	})
+}`
 
 export const addCommunidditmember=gql`
 mutation addCommunidditMember($communidditId: Int!, $userId: Int!){
@@ -200,7 +208,7 @@ query numberFollowing($followerId: Int!){
 }
 `
 export const newTwiddit=gql`
-mutation createTwiddit($userId: Int!, $text:String!, $creationDate:String!, $imageURL1: String!, $imageURL2: String!, $imageURL3: String!, $imageURL4: String!){
+mutation createTwiddit($userId: Int!, $text:String!, $creationDate:String!, $imageURL1: String!, $imageURL2: String!, $imageURL3: String!, $imageURL4: String!, $communidditsId: String){
   createTwiddit(twiddit: {
     userId: $userId,
     text: $text,
@@ -208,7 +216,8 @@ mutation createTwiddit($userId: Int!, $text:String!, $creationDate:String!, $ima
     imageURL1: $imageURL1,
     imageURL2: $imageURL2,
     imageURL3: $imageURL3,
-    imageURL4: $imageURL4
+    imageURL4: $imageURL4,
+    communidditsId: $communidditsId
 	}){
     _id
     text

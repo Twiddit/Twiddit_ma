@@ -13,14 +13,12 @@ import {
 
 
 import { Block, Checkbox, Text, theme } from "galio-framework";
-import * as ImagePicker from 'expo-image-picker';
-import * as DocumentPicker from 'expo-document-picker';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useLazyQuery } from "@apollo/client";
 
 import { useMutation } from "@apollo/client";
-import { newTwiddit } from "../gql/queries";
+import { createCommuniddit } from "../gql/queries";
 
 import { Button, Icon, Input } from "../components";
 import { Images, argonTheme } from "../constants";
@@ -30,42 +28,18 @@ const { width, height } = Dimensions.get("screen");
 export default function NewTwiddit (props) {
 
     const { navigation } = props;
-    const [userId,setuserId] = useState();
-    const [text,settext] = useState("");
-    const [images,setimages] = useState([]);
-    const [imageURL,setimageURL] = useState([]);
-    const [communidditId,setCommunidditId] = useState(null);
-
-    const [singleFile, setSingleFile] = useState(null);
-
-    const storeData = async (key, value) => {
-      try {
-        const jsonValue = JSON.stringify(value)
-        await AsyncStorage.setItem(key, jsonValue)
-      } catch (e) {
-        console.log(e)
-        // saving error
-      }
-    }
-
-    const getCommunidditId = async () => {
-      try {
-  
-        const value = await AsyncStorage.getItem("communidditId")
-        if(value !== null) {
-          setCommunidditId(JSON.parse(value))
-        }
-      } catch(e) {
-        console.log(e)
-      }
-    }
+    const [name,setname] = useState("");
+    const [aboutUs,setaboutUs] = useState("");
+    const [mods,setmods] = useState([]);
 
     const getUserID = async () => {
       try {
         const value = await AsyncStorage.getItem("UserID")
 
         if(value !== null) {
-          setuserId(JSON.parse(value))
+          let m =[]
+          m.push(JSON.parse(value))
+          setmods(m)
           return value
         }
       } catch(e) {
@@ -73,90 +47,17 @@ export default function NewTwiddit (props) {
       }
     }
 
-    const uploadImage = async () => {
-      const BASE_URL = 'xxxx';
-  
-      // Check if any file is selected or not
-      if (singleFile != null) {
-        // If file selected then create FormData
-        const data = new FormData();
-  
-        data.append('file_attachment', {
-          uri: singleFile.uri,
-          name: singleFile.name,
-          type: singleFile.mimeType,
-        });
-  
-        // return
-        try {
-          let res = await fetch(BASE_URL + 'tutorial/upload.php', {
-            method: 'post',
-            body: data,
-            headers: {
-              Accept: 'application/json',
-              'Content-Type': 'multipart/form-data',
-            },
-            timeout: 5000,
-          });
-  
-          let result = await res.json();
-          console.log('result', result);
-          if (result.status == 1) {
-            Alert.alert('Info', result.msg);
-          }
-        } catch (error) {
-          // Error retrieving data
-          // Alert.alert('Error', error.message);
-          console.log('error upload', error);
-        }
-      } else {
-        // If no file selected the show alert
-        Alert.alert('Please Select File first');
-      }
-    };
-  
 
-    const pickImage = async () => {
-      // No permissions request is necessary for launching the image library
-      let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
-        allowsMultipleSelection: true,
-        selectionLimit: 4,
-        //allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
-      });
-  
-      console.log(result);
-  
-      if (!result.canceled) {
-        setimages(result.assets);
-        let uris = [];
-        for (const image of result.assets ){
-          uris.push(image.uri)
-        }
-        setimageURL(uris)
-      }else{
-        alert("Image load cancelled")
-      }
-    };
-
-    const [runMutation, {dataModifyTwiddit, errorModifyTwiddit}] = useMutation(newTwiddit, {
+    const [runMutation, {dataModifyTwiddit, errorModifyTwiddit}] = useMutation(createCommuniddit, {
       variables: {
-        userId: userId,
-        text: text, 
-        creationDate: new Date(), 
-        imageURL1: imageURL[0] ? imageURL[0] : "",
-        imageURL2: imageURL[1] ? imageURL[1] : "",
-        imageURL3: imageURL[2] ? imageURL[2] : "",
-        imageURL4: imageURL[3] ? imageURL[3] : "",
-        communidditsId: communidditId
+        name: name,
+        aboutUs: aboutUs, 
+        mods: mods
       },
       enabled:false,
       onCompleted:(dataModifyTwiddit) => {
         console.log(dataModifyTwiddit)  
-        storeData("communidditId", null)
-        navigation.navigate("Twiddit")
+        navigation.navigate("Communiddits")
         
         
       },
@@ -168,7 +69,6 @@ export default function NewTwiddit (props) {
 
     useEffect(() => {
       getUserID()
-      getCommunidditId()
     }, [])
 
     return (
@@ -187,7 +87,7 @@ export default function NewTwiddit (props) {
               <Block flex>
                 <Block flex={0.17} middle>
                   <Text color="#8898AA" size={20}>
-                    Share your thoughts
+                    Create a Communiddit to share with other users with your same interests
                   </Text>
                 </Block>
                 <Block flex center>
@@ -203,8 +103,28 @@ export default function NewTwiddit (props) {
                           height:70
                         }}
                         multiline
-                        placeholder="What's happening?"
-                        onChangeText={text => settext(text)}
+                        placeholder="What's the name of your Communiddit?"
+                        onChangeText={text => setname(text)}
+                        iconContent={
+                          <Icon
+                            size={16}
+                            color={argonTheme.COLORS.ICON}
+                            name="ungroup"
+                            family="ArgonExtra"
+                            style={styles.inputIcons}
+                          />
+                        }
+                      />
+                    </Block>
+                    <Block width={width * 0.8}>
+                      <Input
+                        borderless
+                        style={{
+                          height:70
+                        }}
+                        multiline
+                        placeholder="Tell the others about your Communiddit"
+                        onChangeText={text => setaboutUs(text)}
                         iconContent={
                           <Icon
                             size={16}
@@ -217,38 +137,12 @@ export default function NewTwiddit (props) {
                       />
                     </Block>
                     
-                      <FlatList
-                        data={imageURL}
-                        horizontal={true}
-                        renderItem={({item}) =>(
-                            <Image source={{uri: item}} style={{
-                              width:70,
-                              height:50
-                            }}/>
-                        )}
-                        keyExtractor={(item)=>item}
-                      />
-                    
-                    <Block middle>
-                        
-                        <Button color="primary" style={styles.createButton} onPress={() => {
-                            pickImage();
-                        }}>
-                            <Icon
-                            size={16}
-                            color={argonTheme.COLORS.ICON}
-                            name="palette"
-                            family="ArgonExtra"
-                            style={styles.inputIcons}
-                          />
-                        </Button>
-                    </Block>
                     <Block middle>
                       <Button color="primary" style={styles.createButton} onPress={() => {
                         runMutation()
                       }}>
                         <Text bold size={14} color={argonTheme.COLORS.WHITE}>
-                          POST
+                          CREATE
                         </Text>
                       </Button>
                     </Block>
