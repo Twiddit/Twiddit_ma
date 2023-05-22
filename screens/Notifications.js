@@ -88,9 +88,9 @@ export default function Notifications (props){
                     
                     <FlatList
                       data={data.viewNotifications}
-                      renderItem={({item}) => <Block flex style={styles.twidditsContainer}><Text> started following you</Text></Block>
+                      renderItem={({item}) => <Block flex style={styles.twidditsContainer}><Text>{item.followerUsername} started following you</Text></Block>
                       }
-                      keyExtractor={item => item.followerId}
+                      keyExtractor={item => item.followerID}
                     />
                                         
                     <Block middle>
