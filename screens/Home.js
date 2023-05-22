@@ -12,46 +12,11 @@ import { useQuery } from "@apollo/client";
 
 export default function Home (props) {
   const [clicked, setClicked] = useState(false);
-  const {data, loading, error} = useQuery(twidditFeed, {
-    variables: {
-      userId:1, 
-    },
-    enabled:false,
-    onCompleted:(data) => {
-      console.log(data.userFeed)
-    },
-    onError(error){
-      console.log(error)
-    }
-  })
-  renderArticles = () => {
-    if (!loading) {
-
     return (
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.articles}>
-        <Block flex>
-        </Block>
-        <Block flex>
-        </Block>
-        <Block flex>
-        </Block>
-        <Block flex>
-        </Block>
-      </ScrollView>
+      <Text>Bienvenido a Twiddit! </Text>
     )
     }
-  }
-
-  return (
-    <Block flex center style={styles.home}>    
-      {this.renderArticles()}
-      
-    </Block>
-  );
   
-}
 
 const styles = StyleSheet.create({
   home: {

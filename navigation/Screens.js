@@ -198,7 +198,7 @@ export default function OnboardingStack(props) {
       <Stack.Screen name="ViewCommuniddits" component={ViewCommuniddits} />
       <Stack.Screen name="Newtwiddit" component={Newtwiddit} />
       <Stack.Screen name="Reply" component={Reply} />
-      <Stack.Screen name="Twiddit" component={Twiddit} />
+      <Stack.Screen name="Twiddit" component={TwidditStack} />
       <Stack.Screen name="Notifications" component={Notifications} />
       <Stack.Screen name="EditProfile" component={EditProfile} />
     </Stack.Navigator>

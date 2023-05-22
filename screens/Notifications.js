@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   ImageBackground,
@@ -28,15 +28,44 @@ export default function Notifications (props){
     const [notification, setNotification] = useState([])
     const [followerId, setFollowerId] = useState(1)
     const [username, setUsername] = useState("USUARIO DE PRUEBA")
+    const [cargando, setCargando] = useState(false)
+    const [userId, setUserId] = useState(0)
     
-    const {data, loading, error} = useQuery(viewNotifications, {
+
+    const getUserID = async () => {
+      try {
+        const value = await AsyncStorage.getItem("UserID")
+  
+        if(value !== null) {
+          await setUserId(JSON.parse(value))
+        }
+      } catch(e) {
+        console.log(e)
+      }
+    }
+    
+    useEffect(()=>{
+      getUserID()
+    }, [])
+
+    useEffect(() => {
+      if (userId != 0){
+        console.log(userId)
+  
+        notificationsQuery()
+      }
+    }, [userId])
+  
+
+    const [notificationsQuery, {data, loading, error}] = useLazyQuery(viewNotifications, {
         variables: {
-        userId: 2, 
+        userId: userId, 
         },
         enabled:false,
         onCompleted:(data) => {
             //console.log(data.viewNotifications)
             setNotification(data.viewNotifications) 
+            setCargando(true)
         },
         onError(error){
             console.log(error)
@@ -59,7 +88,7 @@ export default function Notifications (props){
 
 
 
-    if (!loading) {
+    if (cargando) {
 
     return (
       <Block flex middle>

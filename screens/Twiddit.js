@@ -7,12 +7,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
+import { HeaderHeight } from "../constants/utils";
 import { Icon, Button } from '../components';
 import {Images} from '../constants';
 import { argonTheme } from "../constants";
 import { FlatList } from "react-native-gesture-handler";
 
-const { width } = Dimensions.get('screen');
+const { width ,height } = Dimensions.get('screen');
 
 const thumbMeasure = (width - 48 - 32) / 3;
 
@@ -25,7 +26,6 @@ let isLike = false
 export default function Twiddits (props)  {
 
   const { navigation } = props;
-
   const [userFeed, setUserFeed] = useState([]);
   const [userId, setUserId] = useState(0)
   const [feedLoadnig, setFeedLoading] = useState(false)
@@ -181,13 +181,13 @@ export default function Twiddits (props)  {
 
       const getItemCountData = _data => data.length;
 
+
       const reply= (_id,user,textTwiddit)=>{
         storeData("twidditId",_id)
         storeData("user",user)
         storeData("textTwiddit",textTwiddit)
         navigation.navigate('Reply')
       }
-
       const storeData = async (key, value) => {
         try {
           const jsonValue = JSON.stringify(value)
@@ -198,41 +198,57 @@ export default function Twiddits (props)  {
         }
       }
 
+
       return (
           <FlatList
               data={dataR.twiddit}
-              renderItem={({item}) =>                 <Block style={styles.twidditsContainer}>
-              <Text size={14} style={styles.cardTitle}>@{dataR.user.username}</Text>
-              <Text size={12} >{item.twiddit.text}</Text>
-              <Text size={10} color={argonTheme.COLORS.ACTIVE} bold>{item.twiddit.tags}</Text>
-              
-                <Block row flex={0.25} middle style={styles.socialConnect}>
-                  <Block flex center>
-                      <Button small center color="default" style={styles.twidditButton}>
-                          <Block row>
-                              <Icon
-                                  size={12}
-                                  color={argonTheme.COLORS.WHITE}
-                                  name="ic_mail_24px"
-                                  family="ArgonExtra"
-                              />
-                              <Text style={styles.twidditInteractions}> {item.number_of_replies}</Text>
-                          </Block>
-                      </Button>
-                  </Block>
-                  <Block flex center>
-                      <Button onPress = {()=>{like(item.twiddit._id)}} small center color="default" style={styles.twidditButton}>
-                          <Block row>
-                              <Icon
-                                  size={12}
-                                  color={argonTheme.COLORS.WHITE}
-                                  name="diamond"
-                                  family="ArgonExtra"
-                              />
-                              <Text style={styles.twidditInteractions}> {item.number_of_likes}</Text>
-                          </Block>
-                      </Button>
-                  </Block>
+              renderItem={({item}) => 
+              <Block style={styles.twidditsContainer}>
+                <Text size={14} style={styles.cardTitle}>@{dataR.user.username}</Text>
+                <Text size={12} >{item.twiddit.text}</Text>
+                <Text size={10} color={argonTheme.COLORS.ACTIVE} bold>{item.twiddit.tags}</Text>
+                
+                  <Block row flex={0.25} middle style={styles.socialConnect}>
+                    <Block flex left>
+                        <Button small center color="default" style={styles.twidditButton} onPress={()=>{reply(item.twiddit._id, dataR.user.username, item.twiddit.text)}}>
+                            <Block row>
+                                <Icon
+                                    size={12}
+                                    color={argonTheme.COLORS.WHITE}
+                                    name="ic_mail_24px"
+                                    family="ArgonExtra"
+                                />
+                                <Text style={styles.twidditInteractions}> {item.number_of_replies}</Text>
+                            </Block>
+                        </Button>
+                    </Block>
+                    <Block flex center>
+                        <Button onPress = {()=>{like(item.twiddit._id)}} small center color="default" style={styles.twidditButton}>
+                            <Block row>
+                                <Icon
+                                    size={12}
+                                    color={argonTheme.COLORS.WHITE}
+                                    name="diamond"
+                                    family="ArgonExtra"
+                                />
+                                <Text style={styles.twidditInteractions}> {item.number_of_likes}</Text>
+                            </Block>
+                        </Button>
+                    </Block>
+                    <Block flex right>
+                        <Button small center color="default" style={styles.twidditButton}>
+                            <Block row>
+                                <Icon
+                                    size={12}
+                                    color={argonTheme.COLORS.WHITE}
+                                    name="nav-right"
+                                    family="ArgonExtra"
+                                />
+                                <Text style={styles.twidditInteractions}> {item.number_of_dislikes}</Text>
+                            </Block>
+                        </Button>
+                    </Block>
+            </Block>
           </Block>
         
               

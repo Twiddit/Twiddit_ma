@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Dimensions,
@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { Block, Text, theme } from "galio-framework";
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Button, Twiddit, Icon } from "../components";
 import { Images, argonTheme } from "../constants";
 import { HeaderHeight } from "../constants/utils";
@@ -24,15 +25,43 @@ const thumbMeasure = (width - 48 - 32) / 3;
 
 export default function Profile (props) {
   const { navigation } = props;
-  const [userId, setuserId] = useState(1)
+  const [userId, setUserId] = useState(0)
   const [feed, setFeed] = useState([])
   const [followerNumber, setFollowerNumber] = useState(0)
   const [followedNumber, setFollowedNumber] = useState(0)
+  const [cargando, setCargando] = useState(false)
+
+  const getUserID = async () => {
+    try {
+      const value = await AsyncStorage.getItem("UserID")
+
+      if(value !== null) {
+        await setUserId(JSON.parse(value))
+      }
+    } catch(e) {
+      console.log(e)
+    }
+  }
   
+  useEffect(()=>{
+    getUserID()
+  }, [])
+
+  useEffect(() => {
+    if (userId != 0){
+      console.log(userId)
+
+      profileQuery()
+      followedNumberQuery()
+      followedNumberQuery()
+      userTwidditsQuery()
+    }
+  }, [userId])
+
   // Query for user profile data
-  const {data, loading, error} = useQuery(userProfileData, {
+  const [profileQuery, {data, loading, error}] = useLazyQuery(userProfileData, {
     variables: {
-      userId: 1, 
+      userId: userId, 
     },
     enabled:false,
     onCompleted:(data) => {
@@ -44,9 +73,9 @@ export default function Profile (props) {
   })
 
   // Query for number of followers
-  const {dataFollowers, loadingFollowers, errorFollowers} = useQuery(getFollowerNumber, {
+  const [followerNumberQuery, {dataFollowers, loadingFollowers, errorFollowers}] = useLazyQuery(getFollowerNumber, {
     variables: {
-      followedId: 2, 
+      followedId: userId, 
     },
     enabled:false,
     onCompleted:(dataFollowers) => {
@@ -60,9 +89,9 @@ export default function Profile (props) {
   })
 
   // Query for number of followed accounts
-  const {dataFollowed, loadingFollowed, errorFollowed} = useQuery(getFollowedNumber, {
+  const [followedNumberQuery, {dataFollowed, loadingFollowed, errorFollowed}] = useLazyQuery(getFollowedNumber, {
     variables: {
-      followerId: 1, 
+      followerId: userId, 
     },
     enabled:false,
     onCompleted:(dataFollowed) => {
@@ -76,14 +105,15 @@ export default function Profile (props) {
   })
 
   // Query for users twiddits
-  const {dataMyTwiddits, loadingTwiddits, errorMyTwiddits} = useQuery(userTwiddits, {
+  const [userTwidditsQuery, {dataMyTwiddits, loadingTwiddits, errorMyTwiddits}] = useLazyQuery(userTwiddits, {
     variables: {
-      userId: 1, 
+      userId: userId, 
     },
     enabled:false,
     onCompleted:(dataMyTwiddits) => {
       // console.log(dataMyTwiddits.myTwiddits.twiddit)
       setFeed(dataMyTwiddits.myTwiddits.twiddit)
+      setCargando(true)
     },
     onError(errorMyTwiddits){
       console.log(errorMyTwiddits)
@@ -92,13 +122,13 @@ export default function Profile (props) {
 
 
 
-  if (loading && loadingTwiddits && loadingFollowers && loadingFollowed){
+  if (!cargando){
     return (
       <Text>Loading</Text>
     );
   }
 
-  if (!loading && !loadingTwiddits && feed.length > 0 && !loadingFollowers && !loadingFollowed) {
+  if (cargando) {
     let itemIndexData=-1;
     const getItemData = (_data, index) => {
       itemIndexData += 1;

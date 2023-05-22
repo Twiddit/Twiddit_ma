@@ -5,6 +5,7 @@ import { DrawerItem as DrawerCustomItem } from "../components";
 import Images from "../constants/Images";
 import React from "react";
 
+
 function CustomDrawerContent({
   drawerPosition,
   navigation,
@@ -13,14 +14,14 @@ function CustomDrawerContent({
   state,
   ...rest
 }) {
-  const screens = ["Home", "Profile", "Twiddit", "Communiddits","Newtwiddit", "Elements"];
+  const screens = ["Home", "Profile", "Twiddit", "Communiddits","Newtwiddit"];
   return (
     <Block
       style={styles.container}
       forceInset={{ top: "always", horizontal: "never" }}
     >
       <Block flex={0.06} style={styles.header}>
-        <Image styles={styles.logo} source={Images.Logo} />
+        <Text>Twiddit</Text>
       </Block>
       <Block flex style={{ paddingLeft: 8, paddingRight: 14 }}>
         <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
@@ -45,11 +46,9 @@ function CustomDrawerContent({
                 borderWidth: StyleSheet.hairlineWidth,
               }}
             />
-            <Text color="#8898AA" style={{ marginTop: 16, marginLeft: 8 }}>
-              DOCUMENTATION
-            </Text>
+            
           </Block>
-          <DrawerCustomItem title="Getting Started" navigation={navigation} />
+          
         </ScrollView>
       </Block>
     </Block>
