@@ -203,6 +203,28 @@ mutation createTwiddit($userId: Int!, $text:String!, $creationDate:String!, $ima
   }
 }`
 
+export const newReply=gql`
+mutation createReply($userId: Int!, $text:String!, $twidditId:String!, $creationDate:String!){
+  createReply(reply: {
+    userId: $userId,
+    text: $text,
+    twidditId: $twidditId,
+    creationDate: $creationDate
+	}){
+    twidditId
+    text
+  }
+}`
+
+export const repliesTwiddit=gql`
+query repliesTwiddit($twidditId: String!){
+	repliesTwiddit(twidditId: $twidditId){
+		userId
+    text
+}
+}
+`
+
 export const likesTwiddit = gql`
 query likesTwiddit($twidditId: String!){
   likesTwiddit(twidditId:$twidditId){

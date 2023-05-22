@@ -20,6 +20,7 @@ import Twiddit from "../screens/Twiddit";
 import Communiddits from "../screens/Communiddits";
 import Newtwiddit from "../screens/Newtwiddit";
 import Notifications from "../screens/Notifications";
+import Reply from "../screens/Reply";
 
 import ChangePassword from "../screens/ChangePassword";
 import EditProfile from "../screens/EditProfile";
@@ -167,6 +168,7 @@ export default function OnboardingStack(props) {
       <Stack.Screen name="Register" component={Register} />
       <Stack.Screen name="Communiddits" component={Communiddits} />
       <Stack.Screen name="Newtwiddit" component={Newtwiddit} />
+      <Stack.Screen name="Reply" component={Reply} />
       <Stack.Screen name="Twiddit" component={Twiddit} />
       <Stack.Screen name="Notifications" component={Notifications} />
       <Stack.Screen name="EditProfile" component={EditProfile} />
@@ -239,6 +241,34 @@ export function NewtwidditStack(props) {
           header: ({ navigation, scene }) => (
             <Header
               title="Newtwiddit"
+              search
+              navigation={navigation}
+              scene={scene}
+            />
+          ),
+          cardStyle: { backgroundColor: "#F8F9FE" },
+        }}
+      />
+      
+    </Stack.Navigator>
+  );
+}
+
+export function ReplyStack(props) {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        mode: "card",
+        headerShown: "screen",
+      }}
+    >
+      <Stack.Screen
+        name="Reply"
+        component={Reply}
+        options={{
+          header: ({ navigation, scene }) => (
+            <Header
+              title="Reply"
               search
               navigation={navigation}
               scene={scene}

@@ -4,11 +4,12 @@ import { Block, theme, Text } from 'galio-framework';
 import { twidditFeed, likesTwiddit,likeTwiddit, deleteLikeTwiddit } from "../gql/queries";
 import { useQuery, useLazyQuery, useMutation } from "@apollo/client";
 
-
 import { Icon, Button } from '../components';
 import twiddits_prueba from '../constants/twiddits_prueba';
 import { argonTheme } from "../constants";
 import { FlatList } from "react-native-gesture-handler";
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width } = Dimensions.get('screen');
 
@@ -21,6 +22,8 @@ let isLike = false
 
 
 export default function Twiddits (props)  {
+
+  const { navigation } = props;
 
   const [userFeed, setUserFeed] = useState([]);
 
@@ -144,6 +147,23 @@ export default function Twiddits (props)  {
 
       const getItemCountData = _data => data.length;
 
+      const reply= (_id,user,textTwiddit)=>{
+        storeData("twidditId",_id)
+        storeData("user",user)
+        storeData("textTwiddit",textTwiddit)
+        navigation.navigate('Reply')
+      }
+
+      const storeData = async (key, value) => {
+        try {
+          const jsonValue = JSON.stringify(value)
+          await AsyncStorage.setItem(key, jsonValue)
+        } catch (e) {
+          console.log(e)
+          // saving error
+        }
+      }
+
       return (
         <>
           <FlatList
@@ -155,7 +175,9 @@ export default function Twiddits (props)  {
               
                 <Block row flex={0.25} middle style={styles.socialConnect}>
                   <Block flex center>
-                      <Button small center color="default" style={styles.twidditButton}>
+                      <Button small center color="default" style={styles.twidditButton} onPress={() => {
+                            reply(item.twiddit._id,dataR.user.username,item.twiddit.text);
+                        }}>
                           <Block row>
                               <Icon
                                   size={12}
