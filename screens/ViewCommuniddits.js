@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Dimensions, ImageBackground } from 'react-native';
 import { Block, theme, Text } from 'galio-framework';
-import { twidditFeed, likesTwiddit,likeTwiddit, deleteLikeTwiddit } from "../gql/queries";
-import { useQuery, useLazyQuery, useMutation } from "@apollo/client";
+import { communidditFeedQuery, likesTwiddit,likeTwiddit, deleteLikeTwiddit } from "../gql/queries";
+import { useLazyQuery, useMutation } from "@apollo/client";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -25,49 +25,49 @@ let isLike = false
 
 export default function Twiddits (props)  {
 
-  const [userFeed, setUserFeed] = useState([]);
-  const [userId, setUserId] = useState(0)
+  const [communidditFeed, setCommunidditFeed] = useState([]);
+  const [communidditId, setCommunidditId] = useState(0)
   const [feedLoadnig, setFeedLoading] = useState(false)
 
   useEffect(()=>{
-    getUserID()
+    getCommunidditId()
   }, [])
 
   useEffect(() => {
-    if (userId != 0){
-      console.log(userId)
+    if (communidditId != 0){
+      console.log(communidditId)
 
       feedQuery()
     }
-  }, [userId])
+  }, [communidditId])
 
   useEffect(() => {
+    console.log(communidditFeed)
+  }, [communidditFeed])
 
-  }, [userFeed])
 
 
 
-  let [feedQuery, {data, error, refetch}] = useLazyQuery(twidditFeed, {
+  let [feedQuery, {data, error, refetch}] = useLazyQuery(communidditFeedQuery, {
     variables: {
-      userId: userId, 
+        communidditId: communidditId, 
     },
     enabled:false,
     onCompleted:(data) => {
       setFeedLoading(true)
-      setUserFeed(data.userFeed)
-      
+      setCommunidditFeed(data.communidditsFeed)
     },
     onError(error){
       console.log(error)
     }
   })
 
-  const getUserID = async () => {
+  const getCommunidditId = async () => {
     try {
-      const value = await AsyncStorage.getItem("UserID")
 
+      const value = await AsyncStorage.getItem("communidditId")
       if(value !== null) {
-        await setUserId(JSON.parse(value))
+        setCommunidditId(JSON.parse(value))
       }
     } catch(e) {
       console.log(e)
@@ -159,98 +159,89 @@ export default function Twiddits (props)  {
       <Text>Loading</Text>
     )
   }else{
-    console.log(data)
-    const getItem = (_data, index) => {
-      itemIndex += 1;
-      return userFeed[itemIndex]
-    };
-  
-    const getItemCount = _data => userFeed.length;
-
-    
-
+       
     const Render = ({dataR}) => {
 
-      let itemIndexData = -1;
-
-      const getItemData = (_data, index) => {
-        itemIndexData += 1;
-        return data[itemIndexData]
-      };
-
-      const getItemCountData = _data => data.length;
-
-      return (
-          <FlatList
-              data={dataR.twiddit}
-              renderItem={({item}) => 
-              <Block style={styles.twidditsContainer}>
-                <Text size={14} style={styles.cardTitle}>@{dataR.user.username}</Text>
-                <Text size={12} >{item.twiddit.text}</Text>
-                <Text size={10} color={argonTheme.COLORS.ACTIVE} bold>{item.twiddit.tags}</Text>
-                
-                  <Block row flex={0.25} middle style={styles.socialConnect}>
-                    <Block flex left>
-                        <Button small center color="default" style={styles.twidditButton}>
-                            <Block row>
-                                <Icon
-                                    size={12}
-                                    color={argonTheme.COLORS.WHITE}
-                                    name="ic_mail_24px"
-                                    family="ArgonExtra"
-                                />
-                                <Text style={styles.twidditInteractions}> {item.number_of_replies}</Text>
-                            </Block>
-                        </Button>
-                    </Block>
-                    <Block flex center>
-                        <Button onPress = {()=>{like(item.twiddit._id)}} small center color="default" style={styles.twidditButton}>
-                            <Block row>
-                                <Icon
-                                    size={12}
-                                    color={argonTheme.COLORS.WHITE}
-                                    name="diamond"
-                                    family="ArgonExtra"
-                                />
-                                <Text style={styles.twidditInteractions}> {item.number_of_likes}</Text>
-                            </Block>
-                        </Button>
-                    </Block>
-                    <Block flex right>
-                        <Button small center color="default" style={styles.twidditButton}>
-                            <Block row>
-                                <Icon
-                                    size={12}
-                                    color={argonTheme.COLORS.WHITE}
-                                    name="nav-right"
-                                    family="ArgonExtra"
-                                />
-                                <Text style={styles.twidditInteractions}> {item.number_of_dislikes}</Text>
-                            </Block>
-                        </Button>
-                    </Block>
+        let itemIndexData = -1;
+  
+        const getItemData = (_data, index) => {
+          itemIndexData += 1;
+          return data[itemIndexData]
+        };
+  
+        const getItemCountData = _data => data.length;
+  
+        return (
+            <FlatList
+                data={dataR.twiddit}
+                renderItem={({item}) => 
+                <Block style={styles.twidditsContainer}>
+                  <Text size={14} style={styles.cardTitle}>@{dataR.user.username}</Text>
+                  <Text size={12} >{item.twiddit.text}</Text>
+                  <Text size={10} color={argonTheme.COLORS.ACTIVE} bold>{item.twiddit.tags}</Text>
+                  
+                    <Block row flex={0.25} middle style={styles.socialConnect}>
+                      <Block flex left>
+                          <Button small center color="default" style={styles.twidditButton}>
+                              <Block row>
+                                  <Icon
+                                      size={12}
+                                      color={argonTheme.COLORS.WHITE}
+                                      name="ic_mail_24px"
+                                      family="ArgonExtra"
+                                  />
+                                  <Text style={styles.twidditInteractions}> {item.number_of_replies}</Text>
+                              </Block>
+                          </Button>
+                      </Block>
+                      <Block flex center>
+                          <Button onPress = {()=>{like(item.twiddit._id)}} small center color="default" style={styles.twidditButton}>
+                              <Block row>
+                                  <Icon
+                                      size={12}
+                                      color={argonTheme.COLORS.WHITE}
+                                      name="diamond"
+                                      family="ArgonExtra"
+                                  />
+                                  <Text style={styles.twidditInteractions}> {item.number_of_likes}</Text>
+                              </Block>
+                          </Button>
+                      </Block>
+                      <Block flex right>
+                          <Button small center color="default" style={styles.twidditButton}>
+                              <Block row>
+                                  <Icon
+                                      size={12}
+                                      color={argonTheme.COLORS.WHITE}
+                                      name="nav-right"
+                                      family="ArgonExtra"
+                                  />
+                                  <Text style={styles.twidditInteractions}> {item.number_of_dislikes}</Text>
+                              </Block>
+                          </Button>
+                      </Block>
+              </Block>
             </Block>
-          </Block>
-        
-              
-            }
-              keyExtractor={item => item.twiddit._id}
+          
+                
+              }
+                keyExtractor={item => item.twiddit._id}
+              />
+          
+        )
+      }
+  
+        return (
+          
+            <FlatList
+              data={communidditFeed}
+              renderItem={({item}) => <Render dataR={item}/>}
+              keyExtractor={item => item.user.username}
             />
-        
-      )
+          
+        );
+      }
     }
-
-      return (
-        
-          <FlatList
-            data={userFeed}
-            renderItem={({item}) => <Render dataR={item}/>}
-            keyExtractor={item => item.user.username}
-          />
-        
-      );
-    }
-  }
 
   const styles = StyleSheet.create({
     profile: {
