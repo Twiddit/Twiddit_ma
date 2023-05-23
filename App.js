@@ -6,6 +6,9 @@ import { Asset } from "expo-asset";
 import { Block, GalioProvider } from "galio-framework";
 import { NavigationContainer } from "@react-navigation/native";
 import { ApolloProvider, InMemoryCache, ApolloClient, gql } from "@apollo/client";
+import { LogBox } from 'react-native';
+
+LogBox.ignoreAllLogs();//Ignore all log notifications
 
 const client = new ApolloClient({
   uri:"http://192.168.5.117:5000/graphql",
