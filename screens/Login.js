@@ -33,7 +33,7 @@ export default function Login (props) {
       storeData("Authorization", data.login.data.accessToken)
       storeData("UserID", data.login.data.userId)
       console.log(data)  
-      navigation.navigate("Twiddit")
+      navigation.navigate("App")
       
     },
     onError(error){

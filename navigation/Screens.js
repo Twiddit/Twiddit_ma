@@ -165,6 +165,7 @@ function TwidditStack(props) {
           header: ({ navigation, scene }) => (
             <Header
               title="Twiddits"
+              options
               navigation={navigation}
               scene={scene}
             />
@@ -200,7 +201,7 @@ export default function OnboardingStack(props) {
       <Stack.Screen name="NewCommuniddit" component={NewCommuniddit} />
       <Stack.Screen name="Newtwiddit" component={Newtwiddit} />
       <Stack.Screen name="Reply" component={Reply} />
-      <Stack.Screen name="Twiddit" component={TwidditStack} />
+      <Stack.Screen name="Twiddit" component={Twiddit} />
       <Stack.Screen name="Notifications" component={Notifications} />
       <Stack.Screen name="EditProfile" component={EditProfile} />
     </Stack.Navigator>

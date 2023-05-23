@@ -324,17 +324,7 @@ export default function Profile (props) {
                           </Button>
                       </Block>
                       <Block flex right>
-                          <Button small center color="default" style={styles.twidditButton}>
-                              <Block row>
-                                  <Icon
-                                      size={12}
-                                      color={argonTheme.COLORS.WHITE}
-                                      name="nav-right"
-                                      family="ArgonExtra"
-                                  />
-                                  <Text style={styles.twidditInteractions}> {item.number_of_dislikes}</Text>
-                              </Block>
-                          </Button>
+                          
                       </Block>
               </Block>
             </Block>
